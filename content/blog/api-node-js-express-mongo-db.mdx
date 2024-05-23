@@ -1,0 +1,299 @@
+---
+title: สอนทำ API ง่าย ๆ ด้วย Node.js Express MongoDB
+description: ในบทความนี้เราจะสอนวิธีการสร้าง API สำหรับการจัดการข้อมูลนักศึกษา (student) โดยใช้ Node.js, Express, และ MongoDB เป็น API ที่สามารถสร้างข้อมูล, อ่านข้อมูล, อัปเดตข้อมูล, และลบข้อมูลของนักศึกษาได้ด้วย HTTP requests.
+date: 2024-05-01
+published: true
+---
+
+![1_xdo0UBpyszvD7-7EH4TkIA.png](https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/1_xdo0_U_Bpyszv_D7_7_EH_4_Tk_IA_122661978b.png)
+
+### เริ่มสร้างโปรเจกต์
+
+เปิดโปรเจกต์ในไดเรกทอรีที่คุณต้องการสร้าง API หรือแอปพลิเคชัน Node.js ใหม่ในโฟลเดอร์ที่คุณต้องการ
+
+เปิดหน้าโฟลเดอร์โปรเจกต์ในหน้าเทอมินอล (Terminal) หรือ Command Promptใช้คำสั่ง ```npm init``` โดยไม่ต้องใส่พารามิเตอร์เพิ่มเติม
+
+```bash
+npm init
+```
+
+เมื่อคุณใช้คำสั่ง npm init แล้ว โปรเจกต์จะขอข้อมูลเพิ่มเติมเกี่ยวกับโปรเจกต์ของคุณ เช่น
+
+- name: ชื่อของโปรเจกต์ (ควรเป็นชื่อที่อธิบายโปรเจกต์ของคุณ)
+- version: เวอร์ชันของโปรเจกต์ (เริ่มต้นเป็น 1.0.0 และคุณสามารถแก้ไขได้)
+- description: คำอธิบายโปรเจกต์ (ควรอธิบายโปรเจกต์ของคุณให้ชัดเจน)
+- entry point: ไฟล์หลักที่จะถูกโหลดเมื่อเริ่มต้นโปรเจกต์ (ส่วนมากคือ index.js)
+- test command: คำสั่งที่ใช้ในการรันการทดสอบ (ถ้ามี)
+- git repository: URL ของ Git repository ของโปรเจกต์ (ถ้ามี)
+- keywords: คีย์เวิร์ดที่เกี่ยวข้องกับโปรเจกต์
+- author: ชื่อผู้สร้างหรือทีมที่พัฒนาโปรเจกต์
+- license: สัญญาอนุญาตสำหรับโปรเจกต์ (เช่น MIT, Apache-2.0, GPL-3.0, หรือสัญญาอนุญาตอื่น ๆ)
+
+หลังจากที่คุณกรอกข้อมูลเสร็จเรียบร้อย คำสั่ง npm init จะสร้างไฟล์ package.json ในโฟลเดอร์โปรเจกต์ของคุณ โดยใช้ข้อมูลที่คุณได้ระบุ
+
+เมื่อได้ package.json แล้ว คุณสามารถเพิ่ม dependencies และ scripts สำหรับโปรเจกต์ของคุณในไฟล์ package.json และใช้คำสั่ง npm install เพื่อติดตั้ง dependencies
+
+### ติดตั้ง Dependencies
+
+เริ่มต้นด้วยการติดตั้ง dependencies ที่จำเป็นโดยใช้ `npm` หรือ `yarn`
+
+
+```bash
+npm install express mongoose body-parser cors
+```
+ หรือ
+```bash
+yarn add express mongoose body-parser cors
+```
+
+### สร้างไฟล์ db.js
+
+ไฟล์ db.js นี้ เราใช้ Mongoose เพื่อเชื่อมต่อกับฐานข้อมูล MongoDB ผ่าน URL `mongodb://localhost:27017/blog` ซึ่งเป็น URL ของฐานข้อมูล MongoDB บนเครื่อง localhost และชื่อฐานข้อมูลคือ **blog**
+
+ฟังก์ชัน`connectToDatabase` ใช้เพื่อเชื่อมต่อกับฐานข้อมูล MongoDB และคืนค่าเป็น connection object ของ Mongoose โดยใช้ `await mongoose.connect()` ฟังก์ชัน `closeDatabaseConnection` ใช้เพื่อยกเลิกการเชื่อมต่อกับฐานข้อมูลเมื่อไม่ต้องการ โดยใช้ `await mongoose.disconnect()`
+
+
+```js showLineNumbers
+const mongoose = require("mongoose");
+
+async function connectToDatabase() {
+  try {
+    await mongoose.connect("mongodb://localhost:27017/blog", {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+
+    return mongoose.connection;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function closeDatabaseConnection() {
+  try {
+    await mongoose.disconnect();
+  } catch (error) {
+    throw error;
+  }
+}
+
+module.exports = {
+  connectToDatabase,
+  closeDatabaseConnection,
+};
+```
+### สร้างไฟล์ student.js
+
+ไฟล์ `student.js` เรากำหนด Schema ของข้อมูลนักศึกษา (student) โดยใช้ Mongoose. Schema ประกอบด้วยฟิลด์ต่าง ๆ ของข้อมูลนักศึกษา เช่น studentID, firstName, และ lastName
+
+- studentID เป็นชนิด String และจำเป็นต้องมี (required) และเป็น unique คือไม่สามารถซ้ำกันได้
+- firstName เป็นชนิด String ซึ่งระบุชื่อจริงของนักศึกษา
+- lastName เป็นชนิด String ซึ่งระบุนามสกุลของนักศึกษา
+
+นอกจากนี้ เราใช้ `module.exports` เพื่อส่งออกโมเดลของข้อมูลนักศึกษา เพื่อให้ไฟล์อื่น ๆ ในโปรเจคสามารถนำไปใช้งานได้ด้วยการ require ในกรณีนี้โมเดลของนักศึกษาถูกตั้งชื่อว่า "Student" และใช้ Schema ที่กำหนดไว้
+
+```js showLineNumbers
+const mongoose = require("mongoose");
+
+const studentSchema = new mongoose.Schema({
+  studentID: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  firstName: String,
+  lastName: String,
+});
+
+module.exports = mongoose.model("Student", studentSchema);
+```
+### สร้างไฟล์ index.js
+```js showLineNumbers
+const express = require("express");
+const bodyParser = require("body-parser");
+const { connectToDatabase, closeDatabaseConnection } = require("./db");
+const Student = require("./student");
+const cors = require("cors");
+
+const app = express();
+const port = 3000;
+```
+
+เริ่มต้นด้วยการ import แพ็กเกจที่จำเป็นเพื่อสร้างและกำหนดค่าแอปพลิเคชัน Express
+- `express` เป็นแพ็กเกจ Express.js ที่ใช้ในการสร้างและกำหนดค่าเซิร์ฟเวอร์ HTTP
+- `body-parser` เป็น middleware ที่ช่วยในการแปลงข้อมูลที่ส่งผ่าน HTTP request body เช่น JSON ให้อยู่ในรูปแบบ JavaScript objects
+- `connectToDatabase` และ `closeDatabaseConnection` เป็นฟังก์ชันที่เราสร้างในไฟล์ `db.js` เพื่อเชื่อมต่อกับฐานข้อมูล MongoDB และยกเลิกการเชื่อมต่อ
+- `Student` เป็นโมเดลของข้อมูลนักศึกษาที่เราสร้างในไฟล์ `student.js` เพื่อใช้ในการเข้าถึงข้อมูลนักศึกษาในฐานข้อมูล MongoDB
+- `cors` เป็น middleware ที่ช่วยให้แอปพลิเคชันสามารถรับข้อมูลจาก domain อื่น (Cross-Origin Resource Sharing) โดยที่ไม่เกิดข้อผิดพลาดตามนโยบาย Same-Origin Policy
+
+```js
+// Middleware
+app.use(cors());
+
+// Connect to the database
+connectToDatabase()
+  .then(() => {
+    console.log("Connected to the database");
+    app.listen(port, () => {
+      console.log(`Server is running on http://localhost:${port}/student`);
+    });
+  })
+  .catch((error) => {
+    console.error("Error connecting to the database", error);
+  });
+  ```
+-  `app.use(cors())` ใช้ middleware `cors` เพื่อเปิดให้แอปพลิเคชันของคุณสามารถรับข้อมูลจาก domain อื่นได้ โดยไม่มีข้อผิดพลาดตามนโยบาย Same-Origin Policy
+- `connectToDatabase()` เป็นการเรียกใช้ฟังก์ชัน `connectToDatabase` ที่เราสร้างในไฟล์ db.js เพื่อเชื่อมต่อกับฐานข้อมูล MongoDB เมื่อการเชื่อมต่อสำเร็จแล้ว แอปพลิเคชันจะเริ่มทำงานและเริ่มตั้งค่าเซิร์ฟเวอร์ Express ที่ port 3000
+
+```js
+app.use(bodyParser.json());
+```
+API endpoint คุณจะต้องเพิ่มโค้ดเพื่อทำงานกับฐานข้อมูล MongoDB
+### เพิ่มนักศึกษาใหม่
+```js showLineNumbers
+app.post("/student", async (req, res) => {
+  try {
+    const { studentID, firstName, lastName } = req.body;
+
+    // ตรวจสอบว่ามีข้อมูลที่จำเป็นหรือไม่
+    if (!studentID || !firstName || !lastName) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    // ตรวจสอบว่า studentID ซ้ำหรือไม่
+    const existingStudentID = await Student.findOne({ studentID });
+    if (existingStudentID) {
+      return res
+        .status(409)
+        .json({ error: "Student with the same 'studentID' already exists" });
+    }
+
+    // สร้างนักศึกษาใหม่
+    const newStudent = new Student(req.body);
+    await newStudent.save();
+    res.json(newStudent);
+  } catch (error) {
+    handleServerError(res, error);
+  }
+});
+```
+### Endpoint: `POST /student`
+- สร้างข้อมูลนักศึกษาใหม่ในฐานข้อมูล โดยรับข้อมูลจาก HTTP request body
+- ถ้าข้อมูลถูกส่งมาถูกต้อง และ `studentID` ไม่ซ้ำกัน แอปพลิเคชันจะสร้างนักศึกษาใหม่และคืนข้อมูลนักศึกษาที่ถูกสร้าง
+- ส่ง HTTP POST request ไปยัง `/student` พร้อมกับข้อมูลนักศึกษาในรูปแบบ JSON ที่ระบุ studentID, firstName, และ lastName ของนักศึกษา
+
+```json
+{
+  "studentID": "รหัสนักศึกษา",
+  "firstName": "ชื่อ",
+  "lastName": "นามสกุล"
+}
+```
+### อ่านข้อมูลนักศึกษาทั้งหมด
+```js showLineNumbers
+app.get("/student", async (req, res) => {
+  try {
+    const students = await Student.find();
+    res.json(students);
+  } catch (error) {
+    handleServerError(res, error);
+  }
+});
+```
+### Endpoint: `GET /student`
+- อ่านข้อมูลนักศึกษาทั้งหมดจากฐานข้อมูลและคืนข้อมูลนักศึกษาทั้งหมดในรูปแบบ JSON
+- ส่ง HTTP GET request ไปยัง `/student` เพื่อดึงข้อมูลนักศึกษาทั้งหมด
+
+### อ่านข้อมูลนักศึกษาจาก ID
+```js showLineNumbers
+app.get("/student/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const student = await Student.findById(id);
+    
+    if (!student) {
+      return res.status(404).json({ error: "Student not found" });
+    }
+
+    res.json(student);
+  } catch (error) {
+    handleServerError(res, error);
+  }
+});
+```
+### Endpoint: `GET /student/:id`
+- อ่านข้อมูลนักศึกษาจาก ID ที่ระบุใน URL และคืนข้อมูลนักศึกษานั้นในรูปแบบ JSON
+- ส่ง HTTP GET request ไปยัง `/student/:id` โดยแทน `:id` ด้วย ID ของนักศึกษาที่ต้องการอ่าน
+- ถ้านักศึกษาที่มี ID ที่ระบุถูกพบ แอปพลิเคชันจะคืนข้อมูลของนักศึกษานั้น
+
+### อัปเดตข้อมูลนักศึกษาจาก ID
+```js showLineNumbers
+app.put("/student/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { studentID, firstName, lastName } = req.body;
+
+    // Check if any required fields are missing
+    if (!studentID || !firstName || !lastName) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    const student = await Student.findById(id);
+
+    if (!student) {
+      return res.status(404).json({ error: "Student not found" });
+    }
+
+    // Update the student's information
+    student.studentID = req.body.studentID;
+    student.firstName = req.body.firstName;
+    student.lastName = req.body.lastName;
+
+    await student.save();
+
+    res.json(student);
+  } catch (error) {
+    handleServerError(res, error);
+  }
+});
+```
+### Endpoint: `PUT /student/:id`
+- อัปเดตข้อมูลนักศึกษาโดยใช้ ID ที่ระบุใน URL และรับข้อมูลที่ต้องการอัปเดตจาก HTTP request body
+- ส่ง HTTP PUT request ไปยัง `/student/:id` โดยแทน `:id` ด้วย ID ของนักศึกษาที่ต้องการอัปเดต
+- ใน request body ระบุข้อมูลที่ต้องการอัปเดต เช่น studentID, firstName, และ lastName
+- ถ้าข้อมูลถูกส่งมาถูกต้อง แอปพลิเคชันจะอัปเดตข้อมูลนักศึกษาและคืนข้อมูลนักศึกษาที่ถูกอัปเดต
+- ใน request body ระบุข้อมูลที่ต้องการอัปเดต เช่น
+
+```json
+{
+  "studentID": "รหัสนักศึกษาใหม่",
+  "firstName": "ชื่อใหม่",
+  "lastName": "นามสกุลใหม่"
+}
+```
+### ลบข้อมูลนักศึกษาจาก ID
+```js showLineNumbers
+app.delete("/student/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const student = await Student.findById(id);
+
+    if (!student) {
+      return res.status(404).json({ error: "Student not found" });
+    }
+
+    await student.deleteOne();
+
+    res.json({ message: "Student deleted successfully" });
+  } catch (error) {
+    handleServerError(res, error);
+  }
+});
+```
+### Endpoint: `DELETE /student/:id`
+
+- ลบข้อมูลนักศึกษาจาก ID ที่ระบุใน URL
+- ส่ง HTTP DELETE request ไปยัง `/student/:id` โดยแทน `:id` ด้วย ID ของนักศึกษาที่ต้องการลบ
+- ถ้านักศึกษาที่มี ID ที่ระบุถูกพบ แอปพลิเคชันจะลบข้อมูลนักศึกษานั้น
+
+โดยทั้งหมดนี้เป็น API endpoints ที่ใช้ในการจัดการข้อมูลนักศึกษา คุณสามารถใช้ HTTP requests เพื่อสร้าง, อ่าน, อัปเดต, และลบข้อมูลนักศึกษาในฐานข้อมูลของคุณโดยใช้ endpoint ต่าง ๆ ตามต้องการ
