@@ -13,7 +13,7 @@ const abourPage = () => {
         {">"}About
       </div>
       <div className="text-lg text-gray-900 dark:text-gray-100">
-        My name is Pargorn Ruasijan and I am a web developer. This is my{" "}
+        My name is Pargorn Ruasijan and I am a web developer. This is my&nbsp;
         <Link
           href="https://github.com/xnewz"
           className="hover:underline text-blue-500"
@@ -26,7 +26,7 @@ const abourPage = () => {
         development and I am always looking for new things to learn.
       </div>
       <div className="text-lg text-gray-900 dark:text-gray-100 mt-10">
-        I have a vocational certificate in Information Technology from{" "}
+        I have a vocational certificate in Information Technology from&nbsp;
         <Link
           href="https://www.uthai.ac.th/"
           className="hover:underline text-blue-500"
@@ -34,9 +34,9 @@ const abourPage = () => {
           rel="noopener noreferrer"
         >
           Uthai Thani Technical College
-        </Link>{" "}
+        </Link>&nbsp;
         and I am currently studying for a Bachelor of Science in Industrial
-        Education Program in Engineering Education at{" "}
+        Education Program in Engineering Education at&nbsp;
         <Link
           href="https://www.kmitl.ac.th/"
           className="hover:underline text-blue-500"
@@ -44,10 +44,10 @@ const abourPage = () => {
           rel="noopener noreferrer"
         >
           King Mongkut's Institute of Technology Ladkrabang
-        </Link>{" "}
+        </Link>&nbsp;
       </div>
       <div className="text-lg text-gray-900 dark:text-gray-100 mt-10">
-        I also have a{" "}
+        I also have a&nbsp;
         <Link
           href="https://www.youtube.com/@xnewz770?sub_confirmation=1"
           className="hover:underline text-blue-500"
@@ -69,7 +69,7 @@ const abourPage = () => {
               rel="noopener noreferrer"
             >
               Little Bean Soft
-            </Link>{" "}
+            </Link>&nbsp;
             - Internship
           </li>
           <li>
@@ -80,7 +80,7 @@ const abourPage = () => {
               rel="noopener noreferrer"
             >
               Uthai Thani Technical College
-            </Link>{" "}
+            </Link>&nbsp;
             - Teaching Practice
           </li>
         </ul>
