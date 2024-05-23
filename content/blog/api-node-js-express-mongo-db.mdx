@@ -58,7 +58,7 @@ yarn add express mongoose body-parser cors
 ฟังก์ชัน`connectToDatabase` ใช้เพื่อเชื่อมต่อกับฐานข้อมูล MongoDB และคืนค่าเป็น connection object ของ Mongoose โดยใช้ `await mongoose.connect()` ฟังก์ชัน `closeDatabaseConnection` ใช้เพื่อยกเลิกการเชื่อมต่อกับฐานข้อมูลเมื่อไม่ต้องการ โดยใช้ `await mongoose.disconnect()`
 
 
-```js showLineNumbers
+```js showLineNumbers title="db.js"
 const mongoose = require("mongoose");
 
 async function connectToDatabase() {
@@ -97,7 +97,7 @@ module.exports = {
 
 นอกจากนี้ เราใช้ `module.exports` เพื่อส่งออกโมเดลของข้อมูลนักศึกษา เพื่อให้ไฟล์อื่น ๆ ในโปรเจคสามารถนำไปใช้งานได้ด้วยการ require ในกรณีนี้โมเดลของนักศึกษาถูกตั้งชื่อว่า "Student" และใช้ Schema ที่กำหนดไว้
 
-```js showLineNumbers
+```js showLineNumbers title="student.js"
 const mongoose = require("mongoose");
 
 const studentSchema = new mongoose.Schema({
@@ -113,7 +113,7 @@ const studentSchema = new mongoose.Schema({
 module.exports = mongoose.model("Student", studentSchema);
 ```
 # สร้างไฟล์ index.js
-```js showLineNumbers
+```js showLineNumbers title="index.js"
 const express = require("express");
 const bodyParser = require("body-parser");
 const { connectToDatabase, closeDatabaseConnection } = require("./db");
@@ -131,7 +131,7 @@ const port = 3000;
 - `Student` เป็นโมเดลของข้อมูลนักศึกษาที่เราสร้างในไฟล์ `student.js` เพื่อใช้ในการเข้าถึงข้อมูลนักศึกษาในฐานข้อมูล MongoDB
 - `cors` เป็น middleware ที่ช่วยให้แอปพลิเคชันสามารถรับข้อมูลจาก domain อื่น (Cross-Origin Resource Sharing) โดยที่ไม่เกิดข้อผิดพลาดตามนโยบาย Same-Origin Policy
 
-```js
+```js showLineNumbers title="index.js"
 // Middleware
 app.use(cors());
 
@@ -150,12 +150,12 @@ connectToDatabase()
 -  `app.use(cors())` ใช้ middleware `cors` เพื่อเปิดให้แอปพลิเคชันของคุณสามารถรับข้อมูลจาก domain อื่นได้ โดยไม่มีข้อผิดพลาดตามนโยบาย Same-Origin Policy
 - `connectToDatabase()` เป็นการเรียกใช้ฟังก์ชัน `connectToDatabase` ที่เราสร้างในไฟล์ db.js เพื่อเชื่อมต่อกับฐานข้อมูล MongoDB เมื่อการเชื่อมต่อสำเร็จแล้ว แอปพลิเคชันจะเริ่มทำงานและเริ่มตั้งค่าเซิร์ฟเวอร์ Express ที่ port 3000
 
-```js
+```js title="index.js"
 app.use(bodyParser.json());
 ```
 API endpoint คุณจะต้องเพิ่มโค้ดเพื่อทำงานกับฐานข้อมูล MongoDB
 # เพิ่มนักศึกษาใหม่
-```js showLineNumbers
+```js showLineNumbers title="index.js"
 app.post("/student", async (req, res) => {
   try {
     const { studentID, firstName, lastName } = req.body;
@@ -187,7 +187,7 @@ app.post("/student", async (req, res) => {
 - ถ้าข้อมูลถูกส่งมาถูกต้อง และ `studentID` ไม่ซ้ำกัน แอปพลิเคชันจะสร้างนักศึกษาใหม่และคืนข้อมูลนักศึกษาที่ถูกสร้าง
 - ส่ง HTTP POST request ไปยัง `/student` พร้อมกับข้อมูลนักศึกษาในรูปแบบ JSON ที่ระบุ studentID, firstName, และ lastName ของนักศึกษา
 
-```json
+```json 
 {
   "studentID": "รหัสนักศึกษา",
   "firstName": "ชื่อ",
@@ -195,7 +195,7 @@ app.post("/student", async (req, res) => {
 }
 ```
 # อ่านข้อมูลนักศึกษาทั้งหมด
-```js showLineNumbers
+```js showLineNumbers title="index.js"
 app.get("/student", async (req, res) => {
   try {
     const students = await Student.find();
@@ -210,7 +210,7 @@ app.get("/student", async (req, res) => {
 - ส่ง HTTP GET request ไปยัง `/student` เพื่อดึงข้อมูลนักศึกษาทั้งหมด
 
 # อ่านข้อมูลนักศึกษาจาก ID
-```js showLineNumbers
+```js showLineNumbers title="index.js"
 app.get("/student/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -232,7 +232,7 @@ app.get("/student/:id", async (req, res) => {
 - ถ้านักศึกษาที่มี ID ที่ระบุถูกพบ แอปพลิเคชันจะคืนข้อมูลของนักศึกษานั้น
 
 # อัปเดตข้อมูลนักศึกษาจาก ID
-```js showLineNumbers
+```js showLineNumbers title="index.js"
 app.put("/student/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -277,7 +277,7 @@ app.put("/student/:id", async (req, res) => {
 }
 ```
 # ลบข้อมูลนักศึกษาจาก ID
-```js showLineNumbers
+```js showLineNumbers title="index.js"
 app.delete("/student/:id", async (req, res) => {
   try {
     const { id } = req.params;
