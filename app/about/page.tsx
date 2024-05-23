@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description: "Pargorn.Ru - Web Developer",
 };
 
-const abourPage = () => {
+const aboutPage = () => {
   return (
     <div className="mx-auto max-w-5xl px-6 py-12">
       <div className="text-2xl md:text-3xl lg:text-4xl font-bold mb-6 text-gray-900 dark:text-gray-100">
@@ -117,4 +117,4 @@ const abourPage = () => {
   );
 };
 
-export default abourPage;
+export default aboutPage;
