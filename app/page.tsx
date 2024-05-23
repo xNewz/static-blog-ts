@@ -3,13 +3,14 @@ import { posts } from "#site/content";
 import { PostItem } from "@/components/post-item";
 import { sortPosts } from "@/lib/utils";
 import { siteConfig } from "@/config/site";
+import Link from "next/link";
 
-const DISPLAY_POSTS = 1;
+const DISPLAY_POSTS = 3;
 
 export default function Home() {
   const sortedPosts = sortPosts(posts.filter((post) => post.published));
 
-  const lastestPosts = sortedPosts.slice(0, DISPLAY_POSTS);
+  const latestPosts = sortedPosts.slice(0, DISPLAY_POSTS);
   return (
     <div className="mx-auto max-w-5xl px-6 py-12">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -36,26 +37,38 @@ export default function Home() {
       </div>
       <div className="mt-12">
         <div className="text-2xl md:text-3xl lg:text-4xl font-bold mb-6 text-gray-800 dark:text-gray-200">
-          Latest Blogs
+          Latest Posts
         </div>
-        {lastestPosts?.length > 0 ? (
-          <ul className="flex flex-col">
-            {lastestPosts.map((post) => {
-              const { slug, date, title, description } = post;
-              return (
-                <li key={slug}>
-                  <PostItem
-                    slug={slug}
-                    date={date}
-                    title={title}
-                    description={description}
-                  />
-                </li>
-              );
-            })}
-          </ul>
+        {latestPosts?.length > 0 ? (
+          <>
+            <ul className="flex flex-col">
+              {latestPosts.map((post) => {
+                const { slug, date, title, description } = post;
+                return (
+                  <li key={slug}>
+                    <PostItem
+                      slug={slug}
+                      date={date}
+                      title={title}
+                      description={description}
+                    />
+                  </li>
+                );
+              })}
+            </ul>
+            <div className="mx-auto mt-4 text-center text-lg text-gray-800 dark:text-gray-200">
+              <Link
+                href="/blog"
+                className="text-lg hover:underline text-blue-500 dark:text-blue-400"
+              >
+                See more posts
+              </Link>
+            </div>
+          </>
         ) : (
-          <p>Nothing to see here yet</p>
+          <p className="text-lg text-gray-800 dark:text-gray-200">
+            Blog posts coming soon...
+          </p>
         )}
       </div>
     </div>
