@@ -13,7 +13,7 @@ export default function Home() {
     <div className="mx-auto max-w-5xl px-6 py-12">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="flex justify-center">
-          <Avatar className="w-[200px] h-[200px]">
+          <Avatar className="w-[150px] h-[150px] md:w-[200px] md:h-[200px]">
             <AvatarImage src="/avatar.webp" alt="Pargorn Ruasijan" />
             <AvatarFallback className="text-4xl"></AvatarFallback>
           </Avatar>
