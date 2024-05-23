@@ -7,24 +7,50 @@ published: true
 
 LAMP Stack เป็นชุดของซอฟต์แวร์ที่นิยมในการพัฒนาและดำเนินการเว็บแอปพลิเคชัน (Web Application) ซึ่งประกอบด้วยซอฟต์แวร์ทั้งหมดที่จำเป็นสำหรับการดำเนินการเว็บแอปพลิเคชันบนเซิร์ฟเวอร์ของเรา ซึ่งมีชื่อของมันมาจากตัวอักษรตัวแรกของ Linux, Apache, MySQL, และ PHP/Python/Perl
 
-![lamp.jpeg](https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/lamp_09e24b8f67.jpeg)
+<Image
+src="https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/lamp_09e24b8f67.jpeg"
+alt="LAMP Stack"
+width="800"
+height="300"
+className="mx-auto"
+/>
+
 *source: [https://phoenixweb.com.au/web-lexicon/lamp/](https://phoenixweb.com.au/web-lexicon/lamp/)*
 
 ## LAMP Stack
 จะใช้ระบบปฏิบัติการ Linux เป็นพื้นฐาน เนื่องจาก Linux เป็นระบบปฏิบัติการที่เสถียรและเป็น Open-source ทำให้มีความยืดหยุ่นในการปรับแต่งและการปรับให้เข้ากับการทำงานของแอปพลิเคชันได้ดี นอกจากนี้ Linux ยังเป็นระบบปฏิบัติการที่มีความปลอดภัยมาก ทำให้เหมาะสำหรับการทำงานบนอินเทอร์เน็ต
 
-![apache.webp](https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/apache_5575055c5b.webp)
+<Image
+src="https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/apache_5575055c5b.webp"
+alt="Apache"
+width="800"
+height="300"
+className="mx-auto"
+/>
 *source: [Apache_HTTP_server_logo_%282019-present%29.svg](https://en.m.wikipedia.org/wiki/File:Apache_HTTP_server_logo_%282019-present%29.svg)*
 
 ## Apache
 เป็นเว็บเซิร์ฟเวอร์ที่นิยม มันทำหน้าที่รับคำขอ (request) จากผู้ใช้ผ่านทาง HTTP และส่งข้อมูลกลับมาให้ผู้ใช้ ด้วยความสามารถในการจัดการการโต้ตอบแบบพร้อมรับรอง (concurrent) และความเสถียร ทำให้ Apache เป็นตัวเลือกที่ดีสำหรับการทำเว็บแอปพลิเคชันที่ต้องการการประมวลผลข้อมูล
 
-![mysql.webp](https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/mysql_58370fd3ff.webp)
+<Image
+src="https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/mysql_58370fd3ff.webp"
+alt="MySQL"
+width="800"
+height="300"
+className="mx-auto"
+/>
+
 *source: [Mysql_logo.png](https://wikitech.wikimedia.org/wiki/File:Mysql_logo.png)*
 ## MySQL
 เป็นระบบจัดการฐานข้อมูล (Database Management System — DBMS) ที่เป็นที่นิยมสำหรับ LAMP Stack มีความเร็วและมีประสิทธิภาพสูงในการจัดการข้อมูล รองรับการเก็บข้อมูลเชิงสัมพันธ์ (Relational Database) และสามารถให้บริการการค้นหาข้อมูลได้อย่างมีประสิทธิภาพ
 
-![php.webp](https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/php_c84af113fa.webp)
+<Image
+src="https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/php_c84af113fa.webp"
+alt="PHP"
+width="800"
+height="300"
+className="mx-auto"
+/>
 *source: [PHP-logo.svg](https://commons.wikimedia.org/wiki/File:PHP-logo.svg)*
 
 ส่วนที่สุดท้ายของ LAMP Stack คือภาษาโปรแกรมที่ใช้ในการพัฒนาเว็บแอปพลิเคชัน สามารถเลือกใช้ PHP, Python, หรือ Perl ตามความเหมาะสมของโปรเจคและความถนัดของนักพัฒนา ภาษาเหล่านี้ทำหน้าที่ประมวลผลรหัสที่เขียนบนเว็บเซิร์ฟเวอร์และสร้างเนื้อหาที่ส่งกลับไปยังผู้ใช้
@@ -72,7 +98,13 @@ sudo apt-get install phpmyadmin
 ```
 > ระหว่างการติดตั้ง คุณจะถูกถามให้กำหนดค่าบางอย่าง เลือก apache2 เป็นเว็บเซิร์ฟเวอร์และเลือก Ok เมื่อถามว่าคุณต้องการกำหนดค่าฐานข้อมูล phpMyAdmin ด้วย dbconfig-common
 
-![config_phpmyadmin.webp](https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/config_phpmyadmin_fa816a9a78.webp)
+<Image
+src="https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/config_phpmyadmin_fa816a9a78.webp"
+alt="config_phpmyadmin"
+width="800"
+height="300"
+className="mx-auto"
+/>
 
 ### ขั้นตอนที่ 4 กำหนดค่า Apache สำหรับ phpMyAdmin
 - ตอนนี้คุณต้องกำหนดค่า Apache เพื่อให้ phpMyAdmin ทำงานได้อย่างถูกต้อง
@@ -80,7 +112,7 @@ sudo apt-get install phpmyadmin
 sudo nano /etc/apache2/conf-available/phpmyadmin.conf
 ```
 - เปิดไฟล์กำหนดค่า Apache สำหรับ phpMyAdmin ภายในไฟล์นี้ ให้เพิ่มบรรทัดต่อไปนี้ด้านล่างของบรรทัดที่เริ่มต้นด้วย Alias
-```bash
+```bash showLineNumbers
 <Directory /usr/share/phpmyadmin>
    AddDefaultCharset UTF-8
    <IfModule mod_authz_core.c>
@@ -97,7 +129,13 @@ sudo nano /etc/apache2/conf-available/phpmyadmin.conf
    </IfModule>
 </Directory>
 ```
-![phpmyadmin.conf.webp](https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/phpmyadmin_conf_25fbc052d7.webp)
+<Image
+src="https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/phpmyadmin_conf_25fbc052d7.webp"
+alt="phpmyadmin.conf"
+width="800"
+height="300"
+className="mx-auto"
+/>
 - บันทึกและปิดไฟล์
 ### ขั้นตอนที่ 5 เปิดใช้งานการกำหนดค่า phpMyAdmin
 - พิมพ์คำสั่งต่อไปนี้ในทีเทอร์มินัล
@@ -122,7 +160,7 @@ sudo htpasswd -c /etc/apache2/.htpasswd <username>
 sudo nano /etc/phpmyadmin/apache.conf
 ```
 - ในไฟล์นี้ เพิ่มบรรทัดต่อไปนี้ด้านล่างของบรรทัดที่เริ่มต้นด้วย Alias /phpmyadmin
-```bash
+```bash showLineNumbers
 <Directory /usr/share/phpmyadmin>
    Options FollowSymLinks
    DirectoryIndex index.php
@@ -150,7 +188,13 @@ sudo nano /etc/phpmyadmin/apache.conf
      </IfModule>
   </Directory>
   ```
-![apache.conf.webp](https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/apache_conf_8177142949.webp)
+<Image
+src="https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/apache_conf_8177142949.webp"
+alt="apache.conf"
+width="800"
+height="300"
+className="mx-auto"
+/>
 - บันทึกและปิดไฟล์
 - หลังจากนั้นรีสตาร์ท Apache
 ```bash
@@ -158,6 +202,13 @@ sudo systemctl restart apache2
 ```
 ### ขั้นตอนที่ 8 เข้าสู่ระบบ phpMyAdmin
 - สามารถใช้งาน phpMyAdmin โดยพิมพ์ URL “http://your_IP/phpmyadmin" ในเบราว์เซอร์
-![welcome to phpmyadmin.webp](https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/welcome_to_phpmyadmin_a676888064.webp)
+
+<Image
+src="https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/welcome_to_phpmyadmin_a676888064.webp"
+alt="welcome to phpmyadmin"
+width="300"
+height="300"
+className="mx-auto"
+/>
 
 *อ้างอิงจาก [How to install and secure phpMyAdmin on Ubuntu 22.04](https://www.swhosting.com/en/comunidad/manual/how-to-install-and-secure-phpmyadmin-on-ubuntu-2204)*

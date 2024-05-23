@@ -33,9 +33,6 @@ export default async function PostPage({ params }: PostPageProps) {
   return (
     <article className="container prose dark:prose-invert max-w-5xl mx-auto px-6 py-12">
       <h1 className="mb-2">{post?.title}</h1>
-      {post.description ? (
-        <p className="text-xl mt-0 text-muted-foreground">{post.description}</p>
-      ) : null}
       <hr className="my-4" />
       <MDXContent code={post.body} />
     </article>

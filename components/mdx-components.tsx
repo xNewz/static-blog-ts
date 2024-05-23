@@ -10,6 +10,8 @@ const useMDXComponent = (code: string) => {
 const components = {
   Image,
   Callout,
+  p: (props: any) => <p {...props} className="text-lg leading-relaxed" />,
+  ul: (props: any) => <ul {...props} className="text-lg leading-relaxed" />,
 };
 
 interface MdxProps {

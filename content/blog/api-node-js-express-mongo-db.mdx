@@ -5,9 +5,14 @@ date: 2023-09-27
 published: true
 ---
 
-![1_xdo0UBpyszvD7-7EH4TkIA.png](https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/1_xdo0_U_Bpyszv_D7_7_EH_4_Tk_IA_122661978b.png)
+<Image
+src="https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/1_xdo0_U_Bpyszv_D7_7_EH_4_Tk_IA_122661978b.png"
+alt="Node.js"
+width={800} height={556}
+className="mx-auto"
+/>
 
-### เริ่มสร้างโปรเจกต์
+# เริ่มสร้างโปรเจกต์
 
 เปิดโปรเจกต์ในไดเรกทอรีที่คุณต้องการสร้าง API หรือแอปพลิเคชัน Node.js ใหม่ในโฟลเดอร์ที่คุณต้องการ
 
@@ -33,7 +38,7 @@ npm init
 
 เมื่อได้ package.json แล้ว คุณสามารถเพิ่ม dependencies และ scripts สำหรับโปรเจกต์ของคุณในไฟล์ package.json และใช้คำสั่ง npm install เพื่อติดตั้ง dependencies
 
-### ติดตั้ง Dependencies
+# ติดตั้ง Dependencies
 
 เริ่มต้นด้วยการติดตั้ง dependencies ที่จำเป็นโดยใช้ `npm` หรือ `yarn`
 
@@ -46,7 +51,7 @@ npm install express mongoose body-parser cors
 yarn add express mongoose body-parser cors
 ```
 
-### สร้างไฟล์ db.js
+# สร้างไฟล์ db.js
 
 ไฟล์ db.js นี้ เราใช้ Mongoose เพื่อเชื่อมต่อกับฐานข้อมูล MongoDB ผ่าน URL `mongodb://localhost:27017/blog` ซึ่งเป็น URL ของฐานข้อมูล MongoDB บนเครื่อง localhost และชื่อฐานข้อมูลคือ **blog**
 
@@ -82,7 +87,7 @@ module.exports = {
   closeDatabaseConnection,
 };
 ```
-### สร้างไฟล์ student.js
+# สร้างไฟล์ student.js
 
 ไฟล์ `student.js` เรากำหนด Schema ของข้อมูลนักศึกษา (student) โดยใช้ Mongoose. Schema ประกอบด้วยฟิลด์ต่าง ๆ ของข้อมูลนักศึกษา เช่น studentID, firstName, และ lastName
 
@@ -107,7 +112,7 @@ const studentSchema = new mongoose.Schema({
 
 module.exports = mongoose.model("Student", studentSchema);
 ```
-### สร้างไฟล์ index.js
+# สร้างไฟล์ index.js
 ```js showLineNumbers
 const express = require("express");
 const bodyParser = require("body-parser");
@@ -149,7 +154,7 @@ connectToDatabase()
 app.use(bodyParser.json());
 ```
 API endpoint คุณจะต้องเพิ่มโค้ดเพื่อทำงานกับฐานข้อมูล MongoDB
-### เพิ่มนักศึกษาใหม่
+# เพิ่มนักศึกษาใหม่
 ```js showLineNumbers
 app.post("/student", async (req, res) => {
   try {
@@ -177,7 +182,7 @@ app.post("/student", async (req, res) => {
   }
 });
 ```
-### Endpoint: `POST /student`
+## Endpoint: `POST /student`
 - สร้างข้อมูลนักศึกษาใหม่ในฐานข้อมูล โดยรับข้อมูลจาก HTTP request body
 - ถ้าข้อมูลถูกส่งมาถูกต้อง และ `studentID` ไม่ซ้ำกัน แอปพลิเคชันจะสร้างนักศึกษาใหม่และคืนข้อมูลนักศึกษาที่ถูกสร้าง
 - ส่ง HTTP POST request ไปยัง `/student` พร้อมกับข้อมูลนักศึกษาในรูปแบบ JSON ที่ระบุ studentID, firstName, และ lastName ของนักศึกษา
@@ -189,7 +194,7 @@ app.post("/student", async (req, res) => {
   "lastName": "นามสกุล"
 }
 ```
-### อ่านข้อมูลนักศึกษาทั้งหมด
+# อ่านข้อมูลนักศึกษาทั้งหมด
 ```js showLineNumbers
 app.get("/student", async (req, res) => {
   try {
@@ -200,11 +205,11 @@ app.get("/student", async (req, res) => {
   }
 });
 ```
-### Endpoint: `GET /student`
+## Endpoint: `GET /student`
 - อ่านข้อมูลนักศึกษาทั้งหมดจากฐานข้อมูลและคืนข้อมูลนักศึกษาทั้งหมดในรูปแบบ JSON
 - ส่ง HTTP GET request ไปยัง `/student` เพื่อดึงข้อมูลนักศึกษาทั้งหมด
 
-### อ่านข้อมูลนักศึกษาจาก ID
+# อ่านข้อมูลนักศึกษาจาก ID
 ```js showLineNumbers
 app.get("/student/:id", async (req, res) => {
   try {
@@ -221,12 +226,12 @@ app.get("/student/:id", async (req, res) => {
   }
 });
 ```
-### Endpoint: `GET /student/:id`
+## Endpoint: `GET /student/:id`
 - อ่านข้อมูลนักศึกษาจาก ID ที่ระบุใน URL และคืนข้อมูลนักศึกษานั้นในรูปแบบ JSON
 - ส่ง HTTP GET request ไปยัง `/student/:id` โดยแทน `:id` ด้วย ID ของนักศึกษาที่ต้องการอ่าน
 - ถ้านักศึกษาที่มี ID ที่ระบุถูกพบ แอปพลิเคชันจะคืนข้อมูลของนักศึกษานั้น
 
-### อัปเดตข้อมูลนักศึกษาจาก ID
+# อัปเดตข้อมูลนักศึกษาจาก ID
 ```js showLineNumbers
 app.put("/student/:id", async (req, res) => {
   try {
@@ -257,7 +262,7 @@ app.put("/student/:id", async (req, res) => {
   }
 });
 ```
-### Endpoint: `PUT /student/:id`
+## Endpoint: `PUT /student/:id`
 - อัปเดตข้อมูลนักศึกษาโดยใช้ ID ที่ระบุใน URL และรับข้อมูลที่ต้องการอัปเดตจาก HTTP request body
 - ส่ง HTTP PUT request ไปยัง `/student/:id` โดยแทน `:id` ด้วย ID ของนักศึกษาที่ต้องการอัปเดต
 - ใน request body ระบุข้อมูลที่ต้องการอัปเดต เช่น studentID, firstName, และ lastName
@@ -271,7 +276,7 @@ app.put("/student/:id", async (req, res) => {
   "lastName": "นามสกุลใหม่"
 }
 ```
-### ลบข้อมูลนักศึกษาจาก ID
+# ลบข้อมูลนักศึกษาจาก ID
 ```js showLineNumbers
 app.delete("/student/:id", async (req, res) => {
   try {
@@ -290,7 +295,7 @@ app.delete("/student/:id", async (req, res) => {
   }
 });
 ```
-### Endpoint: `DELETE /student/:id`
+## Endpoint: `DELETE /student/:id`
 
 - ลบข้อมูลนักศึกษาจาก ID ที่ระบุใน URL
 - ส่ง HTTP DELETE request ไปยัง `/student/:id` โดยแทน `:id` ด้วย ID ของนักศึกษาที่ต้องการลบ
