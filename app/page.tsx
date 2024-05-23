@@ -8,7 +8,7 @@ const DISPLAY_POSTS = 1;
 export default function Home() {
   const sortedPosts = sortPosts(posts.filter((post) => post.published));
 
-  const displayPosts = sortedPosts.slice(0, DISPLAY_POSTS);
+  const lastestPosts = sortedPosts.slice(0, DISPLAY_POSTS);
   return (
     <div className="mx-auto max-w-5xl px-6 py-12">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -38,9 +38,9 @@ export default function Home() {
         <div className="text-2xl md:text-3xl lg:text-4xl font-bold mb-6 text-gray-800 dark:text-gray-200">
           Latest Blogs
         </div>
-        {displayPosts?.length > 0 ? (
+        {lastestPosts?.length > 0 ? (
           <ul className="flex flex-col">
-            {displayPosts.map((post) => {
+            {lastestPosts.map((post) => {
               const { slug, date, title, description } = post;
               return (
                 <li key={slug}>
