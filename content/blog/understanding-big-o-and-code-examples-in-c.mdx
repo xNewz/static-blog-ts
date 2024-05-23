@@ -20,7 +20,7 @@ className="mx-auto"
 ### O(1) - Constant Time
 - เส้นกราฟจะเป็นเส้นตรงแนวนอน ซึ่งหมายความว่าเวลาในการทำงานไม่เปลี่ยนแปลงตามขนาดของข้อมูล
 > การเข้าถึงค่าในอาร์เรย์โดยใช้เลขดัชนี (Index)
-```c++ showLineNumbers
+```c++ showLineNumbers title="Constant Time Example"
 void constantTimeExample(int arr[], int size) {
     int value = arr[0];  // O(1)
 }
@@ -29,7 +29,7 @@ void constantTimeExample(int arr[], int size) {
 ### O(log n) - Logarithmic Time
 - เส้นกราฟจะเป็นเส้นโค้งที่ค่อย ๆ เพิ่มขึ้น โดยมีอัตราการเพิ่มที่ลดลงเรื่อย ๆ
 - Binary Search
-```c++ showLineNumbers
+```c++ showLineNumbers title="Logarithmic Time Example"
 int binarySearch(int arr[], int size, int target) {
     int left = 0, right = size - 1;
     while (left <= right) {
@@ -46,7 +46,7 @@ int binarySearch(int arr[], int size, int target) {
 ### O(n) - Linear Time
 - เส้นกราฟจะเป็นเส้นตรงที่เพิ่มขึ้นตามขนาดของข้อมูล
 - Linear Search
-```c++ showLineNumbers
+```c++ showLineNumbers title="Linear Time Example"
 int linearSearch(int arr[], int size, int target) {
     for (int i = 0; i < size; ++i) {
         if (arr[i] == target) return i;  // O(n)
@@ -59,7 +59,7 @@ int linearSearch(int arr[], int size, int target) {
 ### O(n log n) - Linearithmic Time
 - เส้นกราฟจะเพิ่มขึ้นตามขนาดข้อมูลแบบไม่เป็นเส้นตรง และเร็วกว่าการเติบโตแบบเชิงเส้น
 - Merge Sort และ Quick Sort
-```c++ showLineNumbers
+```c++ showLineNumbers title="Merge Sort Example"
 void merge(int arr[], int left, int mid, int right) {
     // Merge two halves
 }
@@ -78,7 +78,7 @@ void mergeSort(int arr[], int left, int right) {
 ### O(n^2) - Quadratic Time
 - เส้นกราฟจะเป็นเส้นโค้งที่เติบโตเร็วขึ้นตามขนาดข้อมูล
 - Bubble Sort
-```c++ showLineNumbers
+```c++ showLineNumbers title="Bubble Sort Example"
 void bubbleSort(int arr[], int size) {
     for (int i = 0; i < size - 1; ++i) {
         for (int j = 0; j < size - i - 1; ++j) {
@@ -94,7 +94,7 @@ void bubbleSort(int arr[], int size) {
 ### O(2^n) - Exponential Time
 - เส้นกราฟจะเป็นเส้นโค้งที่เติบโตอย่างรวดเร็วมาก ตามขนาดข้อมูลที่เพิ่มขึ้น
 - Fibonacci Recursive
-```c++ showLineNumbers
+```c++ showLineNumbers title="Fibonacci Recursive Example"
 int fibonacci(int n) {
     if (n <= 1) return n;
     return fibonacci(n - 1) + fibonacci(n - 2);  // O(2^n)

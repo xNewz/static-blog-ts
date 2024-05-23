@@ -26,7 +26,7 @@ sudo apt install bind9
 sudo nano /etc/bind/named.conf.options
 ```
 - แก้ไขไฟล์ดังตัวอย่าง
-```bash
+```bash title="/etc/bind/named.conf.options"
 options {
     directory "/var/cache/bind";
 
@@ -52,7 +52,7 @@ options {
 sudo nano /etc/bind/named.conf.local
 ```
 - เพิ่มข้อมูลโซน
-```bash
+```bash title="/etc/bind/named.conf.local"
 zone "pargorn.com" {
     type master;
     file "/etc/bind/db.pargorn.com";
@@ -65,7 +65,7 @@ sudo cp /etc/bind/db.local /etc/bind/db.pargorn.com
 sudo nano /etc/bind/db.pargorn.com
 ```
 - แก้ไขไฟล์ db.pargorn.com
-```bash
+```bash title="/etc/bind/db.pargorn.com"
 $TTL    604800
 @       IN      SOA     ns.pargorn.com. root.pargorn.com. (
                               1         ; Serial

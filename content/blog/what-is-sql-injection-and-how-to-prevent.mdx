@@ -35,7 +35,7 @@ className="mx-auto"
 
 ## ตัวอย่างการโจมตี SQL Injection
 สมมติว่ามีเว็บแอปพลิเคชันที่ให้ผู้ใช้เข้าสู่ระบบ โดยมีโค้ด PHP
-```php showLineNumbers
+```php showLineNumbers title="login.php"
 <?php
 $username = $_POST['username'];
 $password = $_POST['password'];
@@ -59,7 +59,7 @@ if (mysqli_num_rows($result) > 0) {
 - **ช่อง password** `' OR '1'='1`
 
 ซึ่งจะทำให้คำสั่ง SQL เป็นดังนี้
-```sql
+```sql title="SQL Injection"
 SELECT * FROM users WHERE username='' OR '1'='1' AND password='' OR '1'='1'
 ```
 เนื่องจาก '1'='1' เป็นเงื่อนไขที่เป็นจริงเสมอ คำสั่งนี้จะส่งคืนข้อมูลของผู้ใช้ทุกคนในฐานข้อมูล ทำให้แฮกเกอร์สามารถเข้าสู่ระบบได้โดยไม่ต้องใช้รหัสผ่านจริง
@@ -69,7 +69,7 @@ SELECT * FROM users WHERE username='' OR '1'='1' AND password='' OR '1'='1'
 - การใช้ Stored Procedures
 - การกรองและตรวจสอบข้อมูลที่ป้อนเข้ามา
 ## ตัวอย่างการใช้ Prepared Statements ใน PHP
-```php showLineNumbers
+```php showLineNumbers title="login.php"
 <?php
 $stmt = $conn->prepare("SELECT * FROM users WHERE username=? AND password=?");
 $stmt->bind_param("ss", $username, $password);

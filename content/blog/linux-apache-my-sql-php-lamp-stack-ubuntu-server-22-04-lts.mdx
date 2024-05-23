@@ -112,7 +112,7 @@ className="mx-auto"
 sudo nano /etc/apache2/conf-available/phpmyadmin.conf
 ```
 - เปิดไฟล์กำหนดค่า Apache สำหรับ phpMyAdmin ภายในไฟล์นี้ ให้เพิ่มบรรทัดต่อไปนี้ด้านล่างของบรรทัดที่เริ่มต้นด้วย Alias
-```bash showLineNumbers
+```bash showLineNumbers title="/etc/apache2/conf-available/phpmyadmin.conf"
 <Directory /usr/share/phpmyadmin>
    AddDefaultCharset UTF-8
    <IfModule mod_authz_core.c>
@@ -160,7 +160,7 @@ sudo htpasswd -c /etc/apache2/.htpasswd <username>
 sudo nano /etc/phpmyadmin/apache.conf
 ```
 - ในไฟล์นี้ เพิ่มบรรทัดต่อไปนี้ด้านล่างของบรรทัดที่เริ่มต้นด้วย Alias /phpmyadmin
-```bash showLineNumbers
+```bash showLineNumbers title="/etc/phpmyadmin/apache.conf"
 <Directory /usr/share/phpmyadmin>
    Options FollowSymLinks
    DirectoryIndex index.php
