@@ -94,3 +94,11 @@ figure[data-rehype-pretty-code-figure]:has(> [data-rehype-pretty-code-title])
   --tw-text-opacity: 1;
   color: rgb(228 228 231 / var(--tw-text-opacity));
 }
+
+pre code {
+  background: none;
+}
+
+:not(pre) > code {
+  @apply rounded-md p-1 dark:bg-gray-800 bg-gray-200;
+}
