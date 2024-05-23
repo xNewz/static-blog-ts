@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 const abourPage = () => {
   return (
-    <div className="container max-w-4xl py-6 lg:py-10">
+    <div className="mx-auto max-w-5xl px-6 py-12">
       <div className="text-2xl md:text-3xl lg:text-4xl font-bold mb-6 text-gray-900 dark:text-gray-100">
         {">"}About
       </div>
