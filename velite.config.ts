@@ -2,7 +2,7 @@ import { defineConfig, defineCollection, s } from "velite";
 
 const computedFields = <T extends { slug: string }>(data: T) => ({
   ...data,
-  slugAtParams: data.slug.split("/").slice(1).join("/"),
+  slugAsParams: data.slug.split("/").slice(1).join("/"),
 });
 
 const posts = defineCollection({
