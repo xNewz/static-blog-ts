@@ -5,7 +5,6 @@ export const siteConfig = {
   author: "Pargorn Ruasijan",
   links: {
     github: "https://github.com/xnewz",
-    twitter: "https://twitter.com/xnewz",
     personalSite: "https://xnewz.site",
   },
 };
