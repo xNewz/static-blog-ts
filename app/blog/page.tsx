@@ -2,6 +2,7 @@ import { posts } from "#site/content";
 import { PostItem } from "@/components/post-item";
 import { QueryPagination } from "@/components/query-pagination";
 import { sortPosts } from "@/lib/utils";
+import { siteConfig } from "@/config/site";
 
 const POST_PER_PAGE = 5;
 
@@ -26,11 +27,11 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
       <div className="flex flex-col items-start gap-4 md:flex-row md:justify-between md:gap-8">
         <div className="flex-1 space-y-4">
           <div className="text-2xl md:text-3xl lg:text-4xl font-bold mb-6 text-gray-900 dark:text-gray-100">
-            {">"}Blogs
+            {">"}
+            {siteConfig.blog.title}
           </div>
           <p className="text-xl text-muted-foreground">
-            A collection of articles about web development, programming, and
-            other topics that interest me.
+            {siteConfig.blog.description}
           </p>
         </div>
       </div>

@@ -9,6 +9,10 @@ export const siteConfig = {
     github: "https://github.com/xnewz",
     personalSite: "https://xnewz.site",
   },
+  blog: {
+    title: "Blog",
+    description: "A collection of articles about web development, programming, and other topics that interest me.",
+  },
 };
 
 export type siteConfig = typeof siteConfig;
