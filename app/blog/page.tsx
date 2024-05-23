@@ -25,7 +25,9 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
     <div className="container max-w-4xl py-6 lg:py-10">
       <div className="flex flex-col items-start gap-4 md:flex-row md:justify-between md:gap-8">
         <div className="flex-1 space-y-4">
-          <h1 className="inline-block font-black text-4xl lg:text-5xl">Blog</h1>
+          <div className="text-2xl md:text-3xl lg:text-4xl font-bold mb-6 text-gray-900 dark:text-gray-100">
+            {">"}Blogs
+          </div>
           <p className="text-xl text-muted-foreground">
             My ramblings on all things web dev.
           </p>

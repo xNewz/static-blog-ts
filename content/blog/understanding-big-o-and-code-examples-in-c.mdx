@@ -1,0 +1,81 @@
+---
+title: ทำความเข้าใจเกี่ยวกับ Big-O และตัวอย่างโค้ดในภาษา C++
+description: Big-O Notation เป็นวิธีการในการวิเคราะห์และแสดงประสิทธิภาพของอัลกอริธึม โดยจะพิจารณาจากจำนวนขั้นตอนการทำงานหรือเวลาที่ใช้ในการทำงานเมื่อขนาดของข้อมูลเพิ่มขึ้น
+date: 2024-05-20
+published: true
+---
+
+![injection.jpg](https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/injection_b6d79d2c1b.jpg)
+
+# SQL Injection 
+เป็นการโจมตีด้านความปลอดภัยที่พบได้บ่อยในระบบฐานข้อมูลที่ใช้ SQL (Structured Query Language) เป็นภาษาสำหรับการจัดการฐานข้อมูล การโจมตีนี้เกิดจากการที่ Attacker ใส่โค้ด SQL ที่เป็นอันตรายลงในช่องทางการป้อนข้อมูลของผู้ใช้ เช่น ช่องกรอกแบบฟอร์ม หรือ URL เพื่อเข้าถึงหรือแก้ไขข้อมูลในฐานข้อมูลอย่างไม่ถูกต้อง
+
+SQL Injection จัดอยู่อันดับที่ 3 ใน [OWASP Top 10](https://owasp.org/www-project-top-ten/) ปี 2021 ซึ่งเป็นรายการของช่องโหว่ความปลอดภัยที่พบบ่อยและสำคัญที่สุดสำหรับเว็บแอปพลิเคชันที่จัดทำโดย Open Web Application Security Project (OWASP) รายการนี้มีการปรับปรุงทุกๆ หลายปีเพื่อสะท้อนถึงการเปลี่ยนแปลงของภัยคุกคามทางไซเบอร์
+
+![mapping.png](https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/mapping_fcd8415da7.png)
+
+> การโจมตีแบบ SQL Injection นั้นถูกจัดเป็นภัยคุกคามอันดับ 3 แสดงให้เห็นถึงความสำคัญและความแพร่หลายของปัญหานี้ในแง่ของความปลอดภัยของเว็บแอปพลิเคชัน การจัดการกับการโจมตีแบบ Injection อย่างถูกวิธีเป็นสิ่งจำเป็นในการรักษาความปลอดภัยของระบบข้อมูลและป้องกันการเข้าถึงที่ไม่พึงประสงค์
+
+### วิธีการโจมตี SQL Injection
+การโจมตี SQL Injection สามารถทำได้หลากหลายรูปแบบ แต่หลักๆ จะมีสองวิธีที่พบได้บ่อย ได้แก่
+- การใส่ค่าเข้าไปในช่องทางป้อนข้อมูลโดยตรง
+- การแก้ไข URL เพื่อเพิ่มคำสั่ง SQL
+
+### ตัวอย่างการโจมตี SQL Injection
+สมมติว่ามีเว็บแอปพลิเคชันที่ให้ผู้ใช้เข้าสู่ระบบ โดยมีโค้ด PHP
+```php
+<?php
+$username = $_POST['username'];
+$password = $_POST['password'];
+
+$query = "SELECT * FROM users WHERE username='$username' AND password='$password'";
+$result = mysqli_query($conn, $query);
+
+if (mysqli_num_rows($result) > 0) {
+    echo "Login successful!";
+} else {
+    echo "Invalid username or password.";
+}
+?>
+```
+
+>โค้ดนี้มีช่องโหว่เนื่องจากการใส่ค่าจากผู้ใช้เข้าไปในคำสั่ง SQL โดยตรง ทำให้เกิด SQL Injection ได้
+
+### การโจมตีโดยใช้ SQL Injection
+แฮกเกอร์สามารถใส่ค่าที่เป็นอันตรายลงในช่องกรอกข้อมูล ดังนี้
+- **ช่อง username** `' OR '1'='1`
+- **ช่อง password** `' OR '1'='1`
+
+ซึ่งจะทำให้คำสั่ง SQL เป็นดังนี้
+```sql
+SELECT * FROM users WHERE username='' OR '1'='1' AND password='' OR '1'='1'
+```
+เนื่องจาก '1'='1' เป็นเงื่อนไขที่เป็นจริงเสมอ คำสั่งนี้จะส่งคืนข้อมูลของผู้ใช้ทุกคนในฐานข้อมูล ทำให้แฮกเกอร์สามารถเข้าสู่ระบบได้โดยไม่ต้องใช้รหัสผ่านจริง
+### วิธีการป้องกัน SQL Injection
+มีหลายวิธีที่สามารถป้องกัน SQL Injection ได้ เช่น
+- การใช้ Prepared Statements
+- การใช้ Stored Procedures
+- การกรองและตรวจสอบข้อมูลที่ป้อนเข้ามา
+### ตัวอย่างการใช้ Prepared Statements ใน PHP
+```php
+<?php
+$stmt = $conn->prepare("SELECT * FROM users WHERE username=? AND password=?");
+$stmt->bind_param("ss", $username, $password);
+
+$username = $_POST['username'];
+$password = $_POST['password'];
+
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows > 0) {
+    echo "Login successful!";
+} else {
+    echo "Invalid username or password.";
+}
+?>
+```
+> ในตัวอย่างนี้ คำสั่ง SQL จะถูกเตรียมไว้ล่วงหน้า และค่า $username และ $password จะถูกใส่เข้าไปในคำสั่งนี้ภายหลัง ทำให้ไม่สามารถใส่โค้ด SQL ที่เป็นอันตรายเข้าไปได้
+
+## สรุป
+SQL Injection เป็นภัยคุกคามที่ร้ายแรง แต่สามารถป้องกันได้ด้วยการเขียนโค้ดที่มีความปลอดภัย เช่น การใช้ Prepared Statements และการตรวจสอบข้อมูลที่ป้อนเข้ามา การป้องกันที่ดีไม่เพียงแต่ช่วยรักษาความปลอดภัยของข้อมูล แต่ยังช่วยรักษาความน่าเชื่อถือของระบบอีกด้วย

@@ -1,0 +1,163 @@
+---
+title: วิธีติดตั้ง Linux, Apache, MySQL, PHP (LAMP) Stack บน Ubuntu Server 22.04 LTS แบบง่าย ๆ
+description: LAMP Stack เป็นชุดของซอฟต์แวร์ที่นิยมในการพัฒนาและดำเนินการเว็บแอปพลิเคชัน (Web Application) ซึ่งประกอบด้วยซอฟต์แวร์ทั้งหมดที่จำเป็นสำหรับการดำเนินการเว็บแอปพลิเคชันบนเซิร์ฟเวอร์
+date: 2023-12-25
+published: true
+---
+
+LAMP Stack เป็นชุดของซอฟต์แวร์ที่นิยมในการพัฒนาและดำเนินการเว็บแอปพลิเคชัน (Web Application) ซึ่งประกอบด้วยซอฟต์แวร์ทั้งหมดที่จำเป็นสำหรับการดำเนินการเว็บแอปพลิเคชันบนเซิร์ฟเวอร์ของเรา ซึ่งมีชื่อของมันมาจากตัวอักษรตัวแรกของ Linux, Apache, MySQL, และ PHP/Python/Perl
+
+![lamp.jpeg](https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/lamp_09e24b8f67.jpeg)
+*source: [https://phoenixweb.com.au/web-lexicon/lamp/](https://phoenixweb.com.au/web-lexicon/lamp/)*
+
+## LAMP Stack
+จะใช้ระบบปฏิบัติการ Linux เป็นพื้นฐาน เนื่องจาก Linux เป็นระบบปฏิบัติการที่เสถียรและเป็น Open-source ทำให้มีความยืดหยุ่นในการปรับแต่งและการปรับให้เข้ากับการทำงานของแอปพลิเคชันได้ดี นอกจากนี้ Linux ยังเป็นระบบปฏิบัติการที่มีความปลอดภัยมาก ทำให้เหมาะสำหรับการทำงานบนอินเทอร์เน็ต
+
+![apache.webp](https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/apache_5575055c5b.webp)
+*source: [Apache_HTTP_server_logo_%282019-present%29.svg](https://en.m.wikipedia.org/wiki/File:Apache_HTTP_server_logo_%282019-present%29.svg)*
+
+## Apache
+เป็นเว็บเซิร์ฟเวอร์ที่นิยม มันทำหน้าที่รับคำขอ (request) จากผู้ใช้ผ่านทาง HTTP และส่งข้อมูลกลับมาให้ผู้ใช้ ด้วยความสามารถในการจัดการการโต้ตอบแบบพร้อมรับรอง (concurrent) และความเสถียร ทำให้ Apache เป็นตัวเลือกที่ดีสำหรับการทำเว็บแอปพลิเคชันที่ต้องการการประมวลผลข้อมูล
+
+![mysql.webp](https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/mysql_58370fd3ff.webp)
+*source: [Mysql_logo.png](https://wikitech.wikimedia.org/wiki/File:Mysql_logo.png)*
+## MySQL
+เป็นระบบจัดการฐานข้อมูล (Database Management System — DBMS) ที่เป็นที่นิยมสำหรับ LAMP Stack มีความเร็วและมีประสิทธิภาพสูงในการจัดการข้อมูล รองรับการเก็บข้อมูลเชิงสัมพันธ์ (Relational Database) และสามารถให้บริการการค้นหาข้อมูลได้อย่างมีประสิทธิภาพ
+
+![php.webp](https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/php_c84af113fa.webp)
+*source: [PHP-logo.svg](https://commons.wikimedia.org/wiki/File:PHP-logo.svg)*
+
+ส่วนที่สุดท้ายของ LAMP Stack คือภาษาโปรแกรมที่ใช้ในการพัฒนาเว็บแอปพลิเคชัน สามารถเลือกใช้ PHP, Python, หรือ Perl ตามความเหมาะสมของโปรเจคและความถนัดของนักพัฒนา ภาษาเหล่านี้ทำหน้าที่ประมวลผลรหัสที่เขียนบนเว็บเซิร์ฟเวอร์และสร้างเนื้อหาที่ส่งกลับไปยังผู้ใช้
+
+### ขั้นตอนที่ 1 อัปเกรดระบบ
+- ก่อนที่จะเริ่มต้น ควรตรวจสอบว่าคุณได้อัปเกรดเป็น Ubuntu 22.04 แล้ว ทำได้โดยพิมพ์คำสั่งต่อไปนี้
+```bash
+sudo apt-get update && sudo apt-get upgrade
+```
+### ขั้นตอนที่ 2 ติดตั้ง Apache, MySQL และ PHP
+- เพื่อให้ใช้ phpMyAdmin คุณต้องติดตั้งเว็บเซิร์ฟเวอร์ Apache ฐานข้อมูล MySQL และภาษา PHP ก่อน
+```bash
+sudo apt-get install apache2 mysql-server php
+```
+> ต่อมา เราต้องเปลี่ยน/ตั้งรหัสผ่าน root ใหม่สำหรับเซิร์ฟเวอร์ MySQL
+- เข้าสู่ระบบ MySQL ในฐานข้อมูลด้วยผู้ใช้ root โดยใช้คำสั่งต่อไปนี้และกด Enter
+```bash
+sudo mysql -u root
+```
+- เมื่อคุณเข้าสู่ MySQL ให้สลับไปยังฐานข้อมูล mysql ด้วยคำสั่งต่อไปนี้
+```mysql
+USE mysql;
+```
+- คุณสามารถเปลี่ยนรหัสผ่าน `root` โดยใช้คำสั่งต่อไปนี้ แทน `<new-password>` ด้วยรหัสผ่านใหม่ที่คุณต้องการตั้ง
+```mysql
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '<new-password>';
+```
+- หากคุณต้องการเปลี่ยนรหัสผ่าน `root` สำหรับโฮสต์ที่ไม่ใช่ `localhost` ให้เปลี่ยนคำสั่งเพื่อใช้โฮสต์ที่ถูกต้องแทนที่ `localhost` จากนั้นรันคำสั่งต่อไปนี้เพื่อนำการเปลี่ยนแปลงไปใช้และโหลดสิทธิ์ใหม่
+```mysql
+FLUSH PRIVILEGES;
+```
+- ออกจาก MySQL console โดยการรัน
+```mysql
+EXIT;
+```
+> หากต้องการ เพิ่มความปลอดภัย ให้กับเซิร์ฟเวอร์ฐานข้อมูลโดยใช้คำสั่งต่อไปนี้
+```mysql
+mysql_secure_installation
+```
+- คำสั่งนี้ทำการตั้งค่าความปลอดภัยพื้นฐานบน MySQL เพื่อป้องกันจากอันตรายที่เป็นไปได้
+### ขั้นตอนที่ 3 ติดตั้ง phpMyAdmin
+- ใช้คำสั่งต่อไปนี้ เพื่อติดตั้ง phpMyAdmin
+```bash
+sudo apt-get install phpmyadmin
+```
+> ระหว่างการติดตั้ง คุณจะถูกถามให้กำหนดค่าบางอย่าง เลือก apache2 เป็นเว็บเซิร์ฟเวอร์และเลือก Ok เมื่อถามว่าคุณต้องการกำหนดค่าฐานข้อมูล phpMyAdmin ด้วย dbconfig-common
+
+![config_phpmyadmin.webp](https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/config_phpmyadmin_fa816a9a78.webp)
+
+### ขั้นตอนที่ 4 กำหนดค่า Apache สำหรับ phpMyAdmin
+- ตอนนี้คุณต้องกำหนดค่า Apache เพื่อให้ phpMyAdmin ทำงานได้อย่างถูกต้อง
+```bash
+sudo nano /etc/apache2/conf-available/phpmyadmin.conf
+```
+- เปิดไฟล์กำหนดค่า Apache สำหรับ phpMyAdmin ภายในไฟล์นี้ ให้เพิ่มบรรทัดต่อไปนี้ด้านล่างของบรรทัดที่เริ่มต้นด้วย Alias
+```bash
+<Directory /usr/share/phpmyadmin>
+   AddDefaultCharset UTF-8
+   <IfModule mod_authz_core.c>
+      # Apache 2.4
+      Require ip 127.0.0.1
+      Require ip ::1
+   </IfModule>
+   <IfModule !mod_authz_core.c>
+      # Apache 2.2
+      Order Deny,Allow
+      Deny from All
+      Allow from 127.0.0.1
+      Allow from ::1
+   </IfModule>
+</Directory>
+```
+![phpmyadmin.conf.webp](https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/phpmyadmin_conf_25fbc052d7.webp)
+- บันทึกและปิดไฟล์
+### ขั้นตอนที่ 5 เปิดใช้งานการกำหนดค่า phpMyAdmin
+- พิมพ์คำสั่งต่อไปนี้ในทีเทอร์มินัล
+```bash
+sudo a2enconf phpmyadmin
+```
+- คำสั่งนี้จะเปิดใช้งานการกำหนดค่า phpMyAdmin ใน Apache
+### ขั้นตอนที่ 6 รีสตาร์ท Apache
+- เพื่อให้การเปลี่ยนแปลงที่ทำให้เกิดขึ้นกับ Apache คุณต้องรีสตาร์ทเว็บเซิร์ฟเวอร์
+```bash
+sudo systemctl restart apache2
+```
+### ขั้นตอนที่ 7 ป้องกัน phpMyAdmin ด้วยรหัสผ่าน
+> โดยค่าเริ่มต้น phpMyAdmin ไม่ได้รับการป้องกันด้วยรหัสผ่าน นั่นหมายความว่าผู้ใดที่มีการเข้าถึง URL phpMyAdmin สามารถเข้าถึงฐานข้อมูลได้ ดังนั้นในการป้องกัน phpMyAdmin ด้วยรหัสผ่าน ทำตามขั้นตอนด้านล่าง
+- สร้างไฟล์รหัสผ่านสำหรับ Apache ในทีเทอร์มินัลพิมพ์คำสั่งต่อไปนี้
+```bash
+sudo htpasswd -c /etc/apache2/.htpasswd <username>
+```
+- `<username>` คือชื่อผู้ใช้ที่คุณต้องการใช้เข้าถึง phpMyAdmin
+- แก้ไขไฟล์กำหนดค่า Apache ของ phpMyAdmin
+```bash
+sudo nano /etc/phpmyadmin/apache.conf
+```
+- ในไฟล์นี้ เพิ่มบรรทัดต่อไปนี้ด้านล่างของบรรทัดที่เริ่มต้นด้วย Alias /phpmyadmin
+```bash
+<Directory /usr/share/phpmyadmin>
+   Options FollowSymLinks
+   DirectoryIndex index.php
+     <IfModule mod_authz_core.c>
+        # Apache 2.4
+      <RequireAny>
+           Require ip 127.0.0.1
+           Require ip ::1
+           AuthType Basic
+           AuthName "Restricted Content"
+           AuthUserFile /etc/apache2/.htpasswd
+           Require valid-user
+      </RequireAny>
+     </IfModule>
+     <IfModule !mod_authz_core.c>
+        # Apache 2.2
+        Order Deny,Allow
+        Deny from All
+        Allow from 127.0.0.1
+        Allow from ::1
+        AuthType Basic
+        AuthName "Restricted Content"
+        AuthUserFile /etc/apache2/.htpasswd
+        Require valid-user
+     </IfModule>
+  </Directory>
+  ```
+![apache.conf.webp](https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/apache_conf_8177142949.webp)
+- บันทึกและปิดไฟล์
+- หลังจากนั้นรีสตาร์ท Apache
+```bash
+sudo systemctl restart apache2
+```
+### ขั้นตอนที่ 8 เข้าสู่ระบบ phpMyAdmin
+- สามารถใช้งาน phpMyAdmin โดยพิมพ์ URL “http://your_IP/phpmyadmin" ในเบราว์เซอร์
+![welcome to phpmyadmin.webp](https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/welcome_to_phpmyadmin_a676888064.webp)
+
+*อ้างอิงจาก [How to install and secure phpMyAdmin on Ubuntu 22.04](https://www.swhosting.com/en/comunidad/manual/how-to-install-and-secure-phpmyadmin-on-ubuntu-2204)*
