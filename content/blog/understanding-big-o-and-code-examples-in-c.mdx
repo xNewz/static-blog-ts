@@ -8,14 +8,19 @@ published: true
 ## Big-O Notation
 เป็นวิธีการในการวิเคราะห์และแสดงประสิทธิภาพของอัลกอริธึม โดยจะพิจารณาจากจำนวนขั้นตอนการทำงานหรือเวลาที่ใช้ในการทำงานเมื่อขนาดของข้อมูลเพิ่มขึ้น โดยไม่สนใจปัจจัยคงที่หรือเงื่อนไขที่ไม่เปลี่ยนแปลงเมื่อขนาดข้อมูลเปลี่ยนไป Big-O ช่วยให้เราเปรียบเทียบอัลกอริธึมต่าง ๆ และเลือกอัลกอริธึมที่เหมาะสมสำหรับงานที่ต้องการ
 
-![big-o.jpeg](https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/big_o_9de97e3bad.jpeg)
+<Image
+src="https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/big_o_9de97e3bad.jpeg"
+alt="Big-O Notation"
+width={800} height={556}
+className="mx-auto"
+/>
 
 กราฟ Big-O ใช้เพื่อแสดงให้เห็นถึงความสัมพันธ์ระหว่างขนาดของข้อมูล (n) และเวลาในการประมวลผลหรือจำนวนขั้นตอนการทำงานของอัลกอริธึม โดยเส้นโค้งของกราฟจะแสดงถึงการเติบโตของเวลาในการทำงานเมื่อขนาดของข้อมูลเพิ่มขึ้น นี่คือลักษณะของกราฟ Big-O สำหรับประเภทต่าง ๆ ของอัลกอริธึมที่กล่าวถึงไป
 
 ### O(1) - Constant Time
 - เส้นกราฟจะเป็นเส้นตรงแนวนอน ซึ่งหมายความว่าเวลาในการทำงานไม่เปลี่ยนแปลงตามขนาดของข้อมูล
 > การเข้าถึงค่าในอาร์เรย์โดยใช้เลขดัชนี (Index)
-```c++
+```c++ showLineNumbers
 void constantTimeExample(int arr[], int size) {
     int value = arr[0];  // O(1)
 }
@@ -24,7 +29,7 @@ void constantTimeExample(int arr[], int size) {
 ### O(log n) - Logarithmic Time
 - เส้นกราฟจะเป็นเส้นโค้งที่ค่อย ๆ เพิ่มขึ้น โดยมีอัตราการเพิ่มที่ลดลงเรื่อย ๆ
 - Binary Search
-```c++
+```c++ showLineNumbers
 int binarySearch(int arr[], int size, int target) {
     int left = 0, right = size - 1;
     while (left <= right) {
@@ -41,7 +46,7 @@ int binarySearch(int arr[], int size, int target) {
 ### O(n) - Linear Time
 - เส้นกราฟจะเป็นเส้นตรงที่เพิ่มขึ้นตามขนาดของข้อมูล
 - Linear Search
-```c++
+```c++ showLineNumbers
 int linearSearch(int arr[], int size, int target) {
     for (int i = 0; i < size; ++i) {
         if (arr[i] == target) return i;  // O(n)
@@ -54,7 +59,7 @@ int linearSearch(int arr[], int size, int target) {
 ### O(n log n) - Linearithmic Time
 - เส้นกราฟจะเพิ่มขึ้นตามขนาดข้อมูลแบบไม่เป็นเส้นตรง และเร็วกว่าการเติบโตแบบเชิงเส้น
 - Merge Sort และ Quick Sort
-```c++
+```c++ showLineNumbers
 void merge(int arr[], int left, int mid, int right) {
     // Merge two halves
 }
@@ -73,7 +78,7 @@ void mergeSort(int arr[], int left, int right) {
 ### O(n^2) - Quadratic Time
 - เส้นกราฟจะเป็นเส้นโค้งที่เติบโตเร็วขึ้นตามขนาดข้อมูล
 - Bubble Sort
-```c++
+```c++ showLineNumbers
 void bubbleSort(int arr[], int size) {
     for (int i = 0; i < size - 1; ++i) {
         for (int j = 0; j < size - i - 1; ++j) {
@@ -89,7 +94,7 @@ void bubbleSort(int arr[], int size) {
 ### O(2^n) - Exponential Time
 - เส้นกราฟจะเป็นเส้นโค้งที่เติบโตอย่างรวดเร็วมาก ตามขนาดข้อมูลที่เพิ่มขึ้น
 - Fibonacci Recursive
-```c++
+```c++ showLineNumbers
 int fibonacci(int n) {
     if (n <= 1) return n;
     return fibonacci(n - 1) + fibonacci(n - 2);  // O(2^n)
