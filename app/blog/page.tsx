@@ -41,7 +41,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
             {">"}
             {siteConfig.blog.title}
           </div>
-          <p className="text-xl text-muted-foreground">
+          <p className="text-lg md:text-xl lg:text-2xl text-gray-800 dark:text-gray-200">
             {siteConfig.blog.description}
           </p>
         </div>
