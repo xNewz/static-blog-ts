@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "About",
-  description: "Pargorn.Ru - Web Developer",
+  description: "Information about Pargorn Ruasijan",
 };
 
 const aboutPage = () => {
