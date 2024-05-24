@@ -43,7 +43,7 @@ export default function Home() {
           <>
             <ul className="flex flex-col">
               {latestPosts.map((post) => {
-                const { slug, date, title, description } = post;
+                const { slug, date, title, description, tags } = post;
                 return (
                   <li key={slug}>
                     <PostItem
@@ -51,6 +51,7 @@ export default function Home() {
                       date={date}
                       title={title}
                       description={description}
+                      tags={tags}
                     />
                   </li>
                 );
