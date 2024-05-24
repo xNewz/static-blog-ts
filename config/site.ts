@@ -8,6 +8,7 @@ export const siteConfig = {
   links: {
     github: "https://github.com/xnewz",
     personalSite: "https://xnewz.site",
+    linkedin: "https://www.linkedin.com/in/pargorn-ru",
   },
   blog: {
     title: "Blog",
