@@ -3,6 +3,7 @@ import { MDXContent } from "@/components/mdx-components";
 import { notFound } from "next/navigation";
 import { siteConfig } from "@/config/site";
 import { Metadata } from "next";
+import { Tag } from "@/components/tag";
 
 import "@/styles/mdx.css";
 
@@ -73,6 +74,11 @@ export default async function PostPage({ params }: PostPageProps) {
   return (
     <article className="container prose dark:prose-invert max-w-5xl mx-auto px-6 py-12">
       <h1 className="mb-2">{post?.title}</h1>
+      <div className="flex gap-2 mb-2">
+        {post.tags?.map((tag) => (
+          <Tag tag={tag} key={tag} />
+        ))}
+      </div>
       <hr className="my-4" />
       <MDXContent code={post.body} />
     </article>

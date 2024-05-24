@@ -1,49 +1,48 @@
 import { posts } from "#site/content";
 import { PostItem } from "@/components/post-item";
-import { QueryPagination } from "@/components/query-pagination";
 import { Tag } from "@/components/tag";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getAllTags, sortPosts, sortTagsByCount } from "@/lib/utils";
-import { siteConfig } from "@/config/site";
+import { getAllTags, getPostsByTagSlug, sortTagsByCount } from "@/lib/utils";
+import { slug } from "github-slugger";
 import { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: "Blog",
-  description: siteConfig.blog.description,
-};
-
-const POST_PER_PAGE = 5;
-
-interface BlogPageProps {
-  searchParams: {
-    page?: string;
+interface TagPageProps {
+  params: {
+    tag: string;
   };
 }
 
-export default async function BlogPage({ searchParams }: BlogPageProps) {
-  const currentPage = Number(searchParams?.page) || 1;
-  const sortedPosts = sortPosts(posts.filter((post) => post.published));
-  const totalPages = Math.ceil(sortedPosts.length / POST_PER_PAGE);
+export async function generateMetadata({
+  params,
+}: TagPageProps): Promise<Metadata> {
+  const { tag } = params;
+  return {
+    title: tag,
+    description: `Posts on the topic of ${tag}`,
+  };
+}
 
-  const displayPosts = sortedPosts.slice(
-    POST_PER_PAGE * (currentPage - 1),
-    POST_PER_PAGE * currentPage
-  );
+export const generateStaticParams = () => {
+  const tags = getAllTags(posts);
+  const paths = Object.keys(tags).map((tag) => ({ tag: slug(tag) }));
+  return paths;
+};
 
+export default function TagPage({ params }: TagPageProps) {
+  const { tag } = params;
+  const title = tag.split("-").join(" ");
+
+  const displayPosts = getPostsByTagSlug(posts, tag);
   const tags = getAllTags(posts);
   const sortedTags = sortTagsByCount(tags);
 
   return (
-    <div className="mx-auto max-w-5xl px-6 py-12">
+    <div className="container max-w-4xl py-6 lg:py-10">
       <div className="flex flex-col items-start gap-4 md:flex-row md:justify-between md:gap-8">
         <div className="flex-1 space-y-4">
-          <div className="text-2xl md:text-3xl lg:text-4xl font-bold mb-6 text-gray-900 dark:text-gray-100">
-            {">"}
-            {siteConfig.blog.title}
-          </div>
-          <p className="text-xl text-muted-foreground">
-            {siteConfig.blog.description}
-          </p>
+          <h1 className="inline-block font-black text-4xl lg:text-5xl capitalize">
+            {title}
+          </h1>
         </div>
       </div>
       <div className="grid grid-cols-12 gap-3 mt-8">
@@ -69,18 +68,14 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
           ) : (
             <p>Nothing to see here yet</p>
           )}
-          <QueryPagination
-            totalPages={totalPages}
-            className="justify-end mt-4"
-          />
         </div>
         <Card className="col-span-12 row-start-3 h-fit sm:col-span-4 sm:col-start-9 sm:row-start-1">
           <CardHeader>
             <CardTitle>Tags</CardTitle>
           </CardHeader>
           <CardContent className="flex flex-wrap gap-2">
-            {sortedTags?.map((tag: string) => (
-              <Tag tag={tag} key={tag} count={tags[tag]} />
+            {sortedTags?.map((t) => (
+              <Tag tag={t} key={t} count={tags[t]} current={slug(t) === tag} />
             ))}
           </CardContent>
         </Card>

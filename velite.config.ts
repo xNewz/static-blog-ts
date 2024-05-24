@@ -2,7 +2,6 @@ import { defineConfig, defineCollection, s } from "velite";
 import rehypeSlug from "rehype-slug";
 import rehypePrettyCode from "rehype-pretty-code";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
-import theme from "tailwindcss/defaultTheme";
 
 const computedFields = <T extends { slug: string }>(data: T) => ({
   ...data,
@@ -19,6 +18,7 @@ const posts = defineCollection({
       description: s.string().max(200).optional(),
       date: s.isodate(),
       published: s.boolean().default(true),
+      tags: s.array(s.string()).optional(),
       body: s.mdx(),
     })
     .transform(computedFields),
