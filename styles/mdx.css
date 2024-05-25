@@ -105,6 +105,5 @@ pre code {
 
 ::after,
 ::before {
-  /* display none */
   @apply hidden;
 }
