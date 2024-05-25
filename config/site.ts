@@ -1,13 +1,13 @@
 export const siteConfig = {
   name: "Pargorn Ruasijan",
-  url: "https://xnewz.site",
+  url: "https://static.xnewz.site",
   author: "xNewz",
   occupation: "Web Developer",
   description:
     "I currently study School of Industrial Education and Technology, KMITL",
   links: {
     github: "https://github.com/xnewz",
-    personalSite: "https://xnewz.site",
+    personalSite: "https://static.xnewz.site",
     linkedin: "https://www.linkedin.com/in/pargorn-ru",
   },
   blog: {
