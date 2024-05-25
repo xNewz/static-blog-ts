@@ -80,6 +80,7 @@ figure[data-rehype-pretty-code-figure]:has(> [data-rehype-pretty-code-title])
   pre {
   border-top-left-radius: 0 !important;
   border-top-right-radius: 0 !important;
+  margin-top: 0 !important;
 }
 
 [data-rehype-pretty-code-title] {
@@ -105,6 +106,5 @@ pre code {
 
 ::after,
 ::before {
-  /* display none */
   @apply hidden;
 }

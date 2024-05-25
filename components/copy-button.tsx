@@ -32,8 +32,7 @@ export function CopyButton({ text, className }: CopyButtonProps): JSX.Element {
       onClick={copy}
       className={clsx(buttonClasses, className)}
     >
-      <Icon className="mr-1 h-4 w-4" />
-      <span>{isCopied ? "Copied!" : "Copy"}</span>
+      <Icon className="h-4 w-4" />
     </button>
   );
 }
