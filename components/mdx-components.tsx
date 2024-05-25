@@ -11,7 +11,6 @@ const useMDXComponent = (code: string) => {
 const components = {
   Image,
   Callout,
-  pre: (props: any) => <Pre {...props} raw={props.children} />,
   p: (props: any) => <p {...props} className="text-sm md:text-lg leading-relaxed" />,
   ul: (props: any) => <ul {...props} className="text-sm md:text-lg leading-relaxed" />,
   h1: (props: any) => <h1 {...props} className="text-2xl md:text-4xl font-bold mt-8 mb-4" />,
@@ -28,20 +27,15 @@ export function MDXContent({ code }: MdxProps) {
   const Component = useMDXComponent(code);
 
   const extractRawContent = (children: any): string => {
-    if (!children) return ''; // Return an empty string if children is null or undefined
+    if (!children) return '';
   
     if (typeof children === 'string') {
-      // If children is already a string, return it as is
       return children;
     } else if (Array.isArray(children)) {
-      // If children is an array, recursively extract raw content from each element
       return children.map((child: any) => extractRawContent(child)).join('');
     } else if (typeof children === 'object' && children.props && children.props.children) {
-      // If children is an object with props, extract raw content from its children
       return extractRawContent(children.props.children);
     }
-  
-    // If children is of other types, return an empty string
     return '';
   };  
 

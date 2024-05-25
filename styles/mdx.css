@@ -102,3 +102,9 @@ pre code {
 :not(pre) > code {
   @apply rounded-md p-1 dark:bg-gray-800 bg-gray-200;
 }
+
+::after,
+::before {
+  /* display none */
+  @apply hidden;
+}
