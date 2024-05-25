@@ -2,6 +2,7 @@ import { defineConfig, defineCollection, s } from "velite";
 import rehypeSlug from "rehype-slug";
 import rehypePrettyCode from "rehype-pretty-code";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import { postProcess, preProcess } from "./lib/rehype-pre-raw";
 
 const computedFields = <T extends { slug: string }>(data: T) => ({
   ...data,
@@ -36,6 +37,7 @@ export default defineConfig({
   collections: { posts },
   mdx: {
     rehypePlugins: [
+      preProcess,
       rehypeSlug,
       [rehypePrettyCode, { theme: "one-dark-pro" }],
       [
@@ -48,6 +50,7 @@ export default defineConfig({
           },
         },
       ],
+      postProcess,
     ],
     remarkPlugins: [],
   },
