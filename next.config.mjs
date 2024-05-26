@@ -7,11 +7,12 @@ export default {
     config.plugins.push(new VeliteWebpackPlugin());
     return config;
   },
+  // allow images all origins
   images: {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "strapi-blog-cms-7x8xk.ondigitalocean.app",
+        hostname: "**",
       },
       {
         protocol: "http",
