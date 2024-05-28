@@ -8,13 +8,7 @@ published: true
 
 Samba เป็นซอฟต์แวร์ที่ช่วยให้คุณสามารถแบ่งปันไฟล์และพิมพ์เอกสารในเครือข่ายระหว่างระบบปฏิบัติการที่แตกต่างกัน เป็นเครื่องมือที่มีประโยชน์อย่างมากสำหรับการแชร์ไฟล์ระหว่างอุปกรณ์ที่ใช้ระบบปฏิบัติการต่าง ๆ เช่น Windows, Linux, macOS, และอุปกรณ์อื่น ๆ ในเครือข่ายเดียวกัน
 
-<Image
-src="https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/ubuntu_logo2_1939ebdc1a.webp"
-alt="Ubuntu"
-width="800"
-height="300"
-className="mx-auto"
-/>
+![Samba](https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/ubuntu_logo2_1939ebdc1a.webp)
 
 ### อัปเดตระบบของ Ubuntu Server
 
@@ -62,13 +56,7 @@ sudo nano /etc/samba/smb.conf
 - ระบุว่าการแชร์ไฟล์นี้เป็นโหมดอ่านเท่านั้นหรือไม่ ถ้าเป็น “no” ผู้ใช้สามารถแก้ไขและบันทึกข้อมูลลงในการแชร์ได้ ถ้าเป็น “yes” ผู้ใช้สามารถดูแต่ไม่สามารถแก้ไขได้
 ### ดังตัวอย่าง
 
-<Image
-src="https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/1_FP_Cr3ca_VTF_Smiu_Swf_Zzt_Q_98b773aa0f.webp"
-alt="smb.conf"
-width="800"
-height="300"
-className="mx-auto"
-/>
+![smb.conf](https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/1_FP_Cr3ca_VTF_Smiu_Swf_Zzt_Q_98b773aa0f.webp)
 
 - บันทึกและออกจาก smb.conf
 - สร้างบัญชีผู้ใช้งาน Samba โดยระบุชื่อผู้ใช้งานและตั้งรหัสผ่าน
@@ -77,13 +65,7 @@ sudo smbpasswd -a ชื่อผู้ใช้ของคุณ
 ```
 ### ดังตัวอย่าง
 
-<Image
-src="https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/1_YE_0_F_Qk_Q_Dl4_YPV_6w_Cy0_E_Ho_Q_f670332fa8.webp"
-alt="smbpasswd"
-width="800"
-height="300"
-className="mx-auto"
-/>
+![smbpasswd](https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/1_YE_0_F_Qk_Q_Dl4_YPV_6w_Cy0_E_Ho_Q_f670332fa8.webp)
 
 - รีสตาร์ท Samba Service
 ```bash
@@ -92,33 +74,15 @@ sudo service smbd restart
 ### เชื่อมต่อกับ Samba ผ่าน Windows
 - พิมพ์ `\\ ตามด้วย IP Address` ของเครื่อง ubuntu
 
-<Image
-src="https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/1_njf_Oao_N0ann_H4_K_Kv_XQR_18_A_f5798bcde6.webp"
-alt="connect_samba"
-width="800"
-height="300"
-className="mx-auto"
-/>
+![connect_samba](https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/1_njf_Oao_N0ann_H4_K_Kv_XQR_18_A_f5798bcde6.webp)
 
 - Login เข้าสู่ระบบด้วยบัญชีที่ได้สร้างไว้ก่อนหน้า
 
-<Image
-src="https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/1_c6vg_B_Inlrq_THAKA_4_I6_PF_Dw_777bb1e7ab.webp"
-alt="login_samba"
-width="400"
-height="300"
-className="mx-auto"
-/>
+![login_samba](https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/1_c6vg_B_Inlrq_THAKA_4_I6_PF_Dw_777bb1e7ab.webp)
 
 - จะแสดงไดเรกทอรีที่แชร์ไว้
 
-<Image
-src="https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/1_T4t1kck_Esgcv_R8r_Tr_Ji_Nw_1b30cc77ed.webp"
-alt="share_folder"
-width="800"
-height="300"
-className="mx-auto"
-/>
+![share_folder](https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/1_T4t1kck_Esgcv_R8r_Tr_Ji_Nw_1b30cc77ed.webp)
 
 ### ทดลองสร้างไฟล์ จากทั้งสองฝั่ง
 - ทดลองสร้างไฟล์จาก Ubuntu
@@ -128,20 +92,14 @@ touch create_from_ubuntu.txt
 
 - ทดลองสร้างไฟล์จาก Windows
 
-<Image
-src="https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/1_64c9413115.webp"
-alt="create_from_windows"
-width="800"
-height="300"
-className="mx-auto"
-/>
+![create_from_windows](https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/1_64c9413115.webp)
 
-<Image
-src="https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/2_1b5dd91702.webp"
-alt="create_from_windows"
-width="800"
-height="300"
-className="mx-auto"
-/>
+- ทดลองสร้างไฟล์จาก Ubuntu
+
+```bash
+touch create_from_ubuntu.txt
+```
+
+![create_from_ubuntu](https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/2_1b5dd91702.webp)
 
 เท่านี้คุณก็สามารถแชร์ไฟล์ระหว่างระบบปฏิบัติการ Ubuntu กับระบบปฏิบัติการอื่น ๆ ได้แล้ว
