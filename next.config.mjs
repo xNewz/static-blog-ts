@@ -12,7 +12,7 @@ export default {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "**",
+        hostname: "*",
       },
       {
         protocol: "http",
