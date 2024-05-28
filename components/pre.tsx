@@ -29,7 +29,7 @@ export function Pre({
       </pre>
       <div
         className={clsx("absolute top-3 right-3", { "opacity-0": !isHovered })}
-        onMouseEnter={() => setIsHovered(true)} // Add onMouseEnter event handler
+        onMouseEnter={() => setIsHovered(true)}
       >
         <CopyButton text={raw} />
       </div>
