@@ -57,12 +57,12 @@ export default function Home() {
                 );
               })}
             </ul>
-            <div className="mx-auto mt-4 text-center text-lg text-gray-800 dark:text-gray-200">
+            <div className="mt-6">
               <Link
                 href="/blog"
-                className="text-lg hover:underline text-blue-500 dark:text-blue-400"
+                className="text-lg text-gray-800 dark:text-gray-200 hover:underline"
               >
-                See more posts
+                See more posts →
               </Link>
             </div>
           </>
