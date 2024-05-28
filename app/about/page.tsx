@@ -16,7 +16,7 @@ const aboutPage = () => {
         My name is Pargorn Ruasijan and I am a web developer. This is my&nbsp;
         <Link
           href="https://github.com/xnewz"
-          className="hover:underline text-blue-500"
+          className="hover:underline text-blue-700 dark:text-blue-300"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -29,28 +29,29 @@ const aboutPage = () => {
         I have a vocational certificate in Information Technology from&nbsp;
         <Link
           href="https://www.uthai.ac.th/"
-          className="hover:underline text-blue-500"
+          className="hover:underline text-blue-700 dark:text-blue-300"
           target="_blank"
           rel="noopener noreferrer"
         >
           Uthai Thani Technical College
-        </Link>&nbsp;
-        and I am currently studying for a Bachelor of Science in Industrial
-        Education Program in Engineering Education at&nbsp;
+        </Link>
+        &nbsp; and I am currently studying for a Bachelor of Science in
+        Industrial Education Program in Engineering Education at&nbsp;
         <Link
           href="https://www.kmitl.ac.th/"
-          className="hover:underline text-blue-500"
+          className="hover:underline text-blue-700 dark:text-blue-300"
           target="_blank"
           rel="noopener noreferrer"
         >
           King Mongkut's Institute of Technology Ladkrabang
-        </Link>&nbsp;
+        </Link>
+        &nbsp;
       </div>
       <div className="text-lg text-gray-900 dark:text-gray-100 mt-10">
         I also have a&nbsp;
         <Link
           href="https://www.youtube.com/@xnewz770?sub_confirmation=1"
-          className="hover:underline text-blue-500"
+          className="hover:underline text-blue-700 dark:text-blue-300"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -64,24 +65,24 @@ const aboutPage = () => {
           <li>
             <Link
               href="https://www.littlebeansoft.com/"
-              className="hover:underline text-blue-500"
+              className="hover:underline text-blue-700 dark:text-blue-300"
               target="_blank"
               rel="noopener noreferrer"
             >
               Little Bean Soft
-            </Link>&nbsp;
-            - Internship
+            </Link>
+            &nbsp; - Internship
           </li>
           <li>
             <Link
               href="https://www.uthai.ac.th/"
-              className="hover:underline text-blue-500"
+              className="hover:underline text-blue-700 dark:text-blue-300"
               target="_blank"
               rel="noopener noreferrer"
             >
               Uthai Thani Technical College
-            </Link>&nbsp;
-            - Teaching Practice
+            </Link>
+            &nbsp; - Teaching Practice
           </li>
         </ul>
       </div>
@@ -94,7 +95,7 @@ const aboutPage = () => {
           <li>
             <Link
               href="https://www.linkedin.com/in/pargorn-ru/"
-              className="hover:underline text-blue-500"
+              className="hover:underline text-blue-700 dark:text-blue-300"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -104,7 +105,7 @@ const aboutPage = () => {
           <li>
             <Link
               href="mailto:pargorn.ru@gmail.com"
-              className="hover:underline text-blue-500"
+              className="hover:underline text-blue-700 dark:text-blue-300"
               target="_blank"
               rel="noopener noreferrer"
             >
