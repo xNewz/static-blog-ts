@@ -13,7 +13,7 @@ export function SiteFooter() {
           </a>
           <a target="_blank" rel="noreferrer" href={siteConfig.links.linkedin}>
             <span className="sr-only">LinkedIn</span>
-            <Icons.Linkedin className="h-6 w-6" />
+            <Icons.linkedin className="h-6 w-6" />
           </a>
           <a target="_blank" rel="noreferrer" href={siteConfig.links.github}>
             <span className="sr-only">GitHub</span>

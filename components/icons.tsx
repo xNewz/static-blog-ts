@@ -19,7 +19,7 @@ export const Icons = {
       <circle cx="5" cy="19" r="1" />
     </svg>
   ),
-  Linkedin: (props: IconProps) => <Linkedin {...props} />,
+  linkedin: (props: IconProps) => <Linkedin {...props} />,
   gitHub: (props: IconProps) => (
     <svg viewBox="0 0 438.549 438.549" {...props}>
       <path

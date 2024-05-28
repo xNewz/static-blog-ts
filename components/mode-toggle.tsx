@@ -24,6 +24,7 @@ export function ModeToggle() {
       variant="ghost"
       onClick={() => setTheme(isDarkMode ? "light" : "dark")}
       className="w-10 px-0"
+      aria-label={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
     >
       {isDarkMode ? (
         <Sun className="h-[1.2rem] w-[1.2rem]" />
