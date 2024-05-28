@@ -16,7 +16,7 @@ const aboutPage = () => {
         My name is Pargorn Ruasijan and I am a web developer. This is my&nbsp;
         <Link
           href="https://github.com/xnewz"
-          className="hover:underline text-blue-700 dark:text-blue-300"
+          className="hover:underline text-blue-700 dark:text-blue-300 hover:text-blue-900 dark:hover:text-blue-500"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -29,7 +29,7 @@ const aboutPage = () => {
         I have a vocational certificate in Information Technology from&nbsp;
         <Link
           href="https://www.uthai.ac.th/"
-          className="hover:underline text-blue-700 dark:text-blue-300"
+          className="hover:underline text-blue-700 dark:text-blue-300 hover:text-blue-900 dark:hover:text-blue-500"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -39,7 +39,7 @@ const aboutPage = () => {
         Industrial Education Program in Engineering Education at&nbsp;
         <Link
           href="https://www.kmitl.ac.th/"
-          className="hover:underline text-blue-700 dark:text-blue-300"
+          className="hover:underline text-blue-700 dark:text-blue-300 hover:text-blue-900 dark:hover:text-blue-500"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -51,7 +51,7 @@ const aboutPage = () => {
         I also have a&nbsp;
         <Link
           href="https://www.youtube.com/@xnewz770?sub_confirmation=1"
-          className="hover:underline text-blue-700 dark:text-blue-300"
+          className="hover:underline text-blue-700 dark:text-blue-300 hover:text-blue-900 dark:hover:text-blue-500"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -65,7 +65,7 @@ const aboutPage = () => {
           <li>
             <Link
               href="https://www.littlebeansoft.com/"
-              className="hover:underline text-blue-700 dark:text-blue-300"
+              className="hover:underline text-blue-700 dark:text-blue-300 hover:text-blue-900 dark:hover:text-blue-500"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -76,7 +76,7 @@ const aboutPage = () => {
           <li>
             <Link
               href="https://www.uthai.ac.th/"
-              className="hover:underline text-blue-700 dark:text-blue-300"
+              className="hover:underline text-blue-700 dark:text-blue-300 hover:text-blue-900 dark:hover:text-blue-500"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -95,7 +95,7 @@ const aboutPage = () => {
           <li>
             <Link
               href="https://www.linkedin.com/in/pargorn-ru/"
-              className="hover:underline text-blue-700 dark:text-blue-300"
+              className="hover:underline text-blue-700 dark:text-blue-300 hover:text-blue-900 dark:hover:text-blue-500"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -105,7 +105,7 @@ const aboutPage = () => {
           <li>
             <Link
               href="mailto:pargorn.ru@gmail.com"
-              className="hover:underline text-blue-700 dark:text-blue-300"
+              className="hover:underline text-blue-700 dark:text-blue-300 hover:text-blue-900 dark:hover:text-blue-500"
               target="_blank"
               rel="noopener noreferrer"
             >
