@@ -30,24 +30,35 @@ export function Callout({
       {...props}
     >
       {type === "warning" && (
-        <div className="flex items-center">
-          <TriangleAlert className="mr-3 h-5 w-5" />
-          <div>{children}</div>
+        <div className="flex flex-col items-start">
+          <div className="flex items-center">
+            <TriangleAlert className="mr-3 h-5 w-5" />
+            <div className="text-black dark:text-white">Warning</div>
+          </div>
+          <div className="text-black dark:text-white">{children}</div>
         </div>
       )}
       {type === "danger" && (
         <div className="flex items-center">
-          <AlertCircle className="mr-3 h-5 w-5" />
-          <div>{children}</div>
+          <div className="flex items-center">
+            <AlertCircle className="mr-3 h-5 w-5" />
+            <div className="text-black dark:text-white">Danger</div>
+          </div>
+          <div className="text-black dark:text-white">{children}</div>
         </div>
       )}
       {type === "info" && (
-        <div className="flex items-center">
-          <Lightbulb className="mr-3 h-5 w-5" />
-          <div>{children}</div>
+        <div className="flex flex-col items-start">
+          <div className="flex items-center">
+            <Lightbulb className="mr-3 h-5 w-5" />
+            <div className="text-black dark:text-white">Note</div>
+          </div>
+          <div className="text-black dark:text-white">{children}</div>
         </div>
       )}
-      {type === "default" && <div>{children}</div>}
+      {type === "default" && (
+        <div className="text-black dark:text-white">{children}</div>
+      )}
     </div>
   );
 }

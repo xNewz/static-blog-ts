@@ -10,9 +10,6 @@ const useMDXComponent = (code: string) => {
 
 const components = {
   Callout,
-  p: (props: any) => (
-    <p {...props} className="text-gray-600 dark:text-gray-400 my-4" />
-  ),
   img: (props: any) => (
     <Image {...props} width={800} height={400} className="mx-auto" />
   ),
