@@ -1,0 +1,346 @@
+---
+title: สร้าง Dashboard ด้วย Grafana และ InfluxDB ด้วย Docker บน Ubuntu
+date: 2024-06-01
+description: สร้าง Dashboard ด้วย Grafana และ InfluxDB ด้วย Docker
+tags: [docker, grafana, influxdb]
+published: true
+---
+
+ในบทความนี้เราจะมาสร้าง Dashboard ด้วย Grafana และ InfluxDB ด้วย Docker บน Ubuntu กัน !!!
+ก่อนอื่นเรามาทำความรู้จักกับ Grafana และ InfluxDB กันก่อนครับ และเราจะใช้ Docker ในการสร้าง Container ของ Grafana และ InfluxDB
+
+## ทำความรู้จักกับ Grafana และ InfluxDB
+
+![Grafana](https://grafana.com/media/products/cloud/grafana/grafana-dashboard-english.png)
+
+### Grafana
+เป็นแพลตฟอร์มที่ใช้ในการสร้างแดชบอร์ด (dashboard) สำหรับการแสดงผลข้อมูลจากแหล่งข้อมูลหลายๆ แห่ง 
+มีความสามารถในการสร้างภาพกราฟิกส์แบบต่างๆ ไม่ว่าจะเป็นกราฟเส้น กราฟแท่ง แผนภูมิ และแผนที่
+
+![InfluxDB](https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/Influxdb_logo.svg/1200px-Influxdb_logo.svg.png)
+
+### InfluxDB
+เป็นฐานข้อมูลที่ออกแบบมาเพื่อการจัดเก็บและจัดการข้อมูลที่เกิดขึ้นตามเวลา (time series data) โดยเฉพาะ
+ไม่ว่าจะเป็นข้อมูลจากเซนเซอร์, log data, หรือ metrics จากระบบคอมพิวเตอร์ 
+InfluxDB มีความสามารถในการจัดการข้อมูลจำนวนมหาศาลได้อย่างรวดเร็วและมีประสิทธิภาพ
+
+<Callout type="info">
+InfluxDB มีภาษา query ของตัวเองที่คล้ายกับ SQL ทำให้ง่ายต่อการใช้งานและการเรียนรู้
+</Callout>
+
+#### ตัวอย่างภาษา query ของ InfluxDB
+
+- เราสามารถเลือกข้อมูลในช่วงเวลาที่ต้องการ เช่น ข้อมูลอุณหภูมิในช่วง 24 ชั่วโมงที่ผ่านมา
+```sql title="เลือกข้อมูลจากช่วงเวลาที่กำหนด"
+SELECT * FROM temperature WHERE time > now() - 24h
+```
+
+- เราสามารถใช้ฟังก์ชันเชิงรวมเพื่อคำนวณค่าเฉลี่ย, ค่าสูงสุด, หรือต่ำสุดของข้อมูลได้ เช่น คำนวณค่าเฉลี่ยของอุณหภูมิในช่วง 24 ชั่วโมงที่ผ่านมา
+```sql title="Aggregate Function"
+SELECT MEAN(value) FROM temperature WHERE time > now() - 24h
+```
+
+- เราสามารถจัดกลุ่มข้อมูลตามเวลาเพื่อดูการเปลี่ยนแปลงของข้อมูลในแต่ละช่วงเวลา เช่น ค่าเฉลี่ยของอุณหภูมิทุกๆ 1 ชั่วโมง ในช่วง 24 ชั่วโมงที่ผ่านมา
+```sql title="Group by time"
+SELECT MEAN(value) FROM temperature WHERE time > now() - 24h GROUP BY time(1h)
+```
+
+#### ตัวอย่างภาษา query ของ InfluxDB รูปแบบ Flux
+- Flux เป็นภาษา query ใหม่ของ influxdb
+```flux title="Flux Query"
+from(bucket: "mydb/autogen")
+  |> range(start: -1h)
+  |> filter(fn: (r) => r._measurement == "cpu")
+  |> filter(fn: (r) => r.cpu == "cpu-total")
+  |> aggregateWindow(every: 1m, fn: mean, createEmpty: false)
+  |> yield(name: "mean")
+```
+
+<Callout type="info">
+query นี้ดึงข้อมูลจาก bucket `mydb/autoge` ในช่วง 1 ชั่วโมงที่ผ่านมา โดยกรองข้อมูลที่มี `_measurement` เป็น "cpu" และ cpu เป็น "cpu-total" จากนั้นคำนวณค่าเฉลี่ยทุก ๆ 1 นาที และส่งผลลัพธ์ออกมาด้วยชื่อ "mean"
+</Callout>
+
+## ขั้นตอนการติดตั้ง
+
+### อัปเดตแพคเกจของ Ubuntu
+
+```bash
+sudo apt-get update && sudo apt-get upgrade
+```
+
+### ติดตั้ง Docker บน Ubuntu
+
+- Set up apt repository
+```bash
+# Add Docker's official GPG key:
+sudo apt-get update
+sudo apt-get install ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+# Add the repository to Apt sources:
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+```
+
+- ติดตั้ง Docker packages
+```bash
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+```
+
+- ตรวจสอบการติดตั้ง Docker
+```bash
+sudo docker --version
+```
+
+<Callout type="info">
+ถ้าหากใช้คำสั่ง `sudo docker --version` แล้วขึ้นเลขเวอร์ชันของ Docker แสดงว่าการติดตั้งสำเร็จ
+</Callout>
+
+## การติดตั้ง และสร้างไฟล์ Docker Compose
+
+- ติดตั้ง Docker Compose
+```bash
+sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+```
+
+- ตรวจสอบการติดตั้ง Docker Compose
+```bash
+docker-compose --version
+```
+
+- สร้างไฟล์ `docker-compose.yml` ด้วยคำสั่ง
+
+```bash
+touch docker-compose.yml
+```
+- แก้ไขไฟล์ `docker-compose.yml` ด้วยโปรแกรมที่ต้องการ เช่น nano, vim, หรือ Visual Studio Code
+
+```bash
+nano docker-compose.yml
+```
+
+- แก้ไขไฟล์ `docker-compose.yml` ด้วยโค้ดด้านล่าง
+
+```yaml title="docker-compose.yml" /8086:8086/#v /mydatabase/#v /adminpassword/#v /admin/#v  /3000:3000/#v
+version: '3.1'
+
+services:
+  influxdb:
+    image: influxdb:latest
+    container_name: influxdb
+    ports:
+      - "8086:8086"
+    environment:
+      - INFLUXDB_DB=mydatabase
+      - INFLUXDB_ADMIN_USER=admin
+      - INFLUXDB_ADMIN_PASSWORD=adminpassword
+    volumes:
+      - influxdb-data:/var/lib/influxdb
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=adminpassword
+    volumes:
+      - grafana-data:/var/lib/grafana
+
+volumes:
+  influxdb-data:
+  grafana-data:
+```
+
+## รัน Container ด้วย Docker Compose
+
+- รันคำสั่งเพื่อสร้าง Container จากไฟล์ `docker-compose.yml`
+```bash
+sudo docker-compose up -d
+```
+
+<Callout type="info">
+`-d` คือคำสั่งที่ใช้ในการรัน Container ในโหมด background (จะรัน Container ตลอดเวลา)
+</Callout>
+
+-  กำลัง Download 
+![pulling images](https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/Screenshot_2567_06_01_at_17_00_41_4f409e8475.png)
+
+## การตั้งค่า InfluxDB
+
+- หลังจากที่ Container ของ InfluxDB รันเสร็จแล้ว ให้เข้าไปที่ `http://localhost:8086` หรือ `http://server-ip:8086` ในเว็บเบราวเซอร์
+
+![InfluxDB](https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/Screenshot_2567_06_01_at_17_49_35_ad314ce7a5.png)
+
+- ตั้งค่า Username, Password, Organization, Bucket
+
+![Create Bucket](https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/Screenshot_2567_06_01_at_17_50_45_d32aa0fc61.png)
+
+- เมื่อตั้งค่าเสร็จแล้ว คุณจะได้ API Token มา ให้เก็บไว้เพื่อใช้ในการเชื่อมต่อกับ Grafana
+
+![API Token](https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/Screenshot_2567_06_01_at_17_52_47_906645de57.png)
+
+{/* T3Qi_sxYiGgm-s9wrSoDp2BArUGX_yJEn7vdIIKWgxqu4XLvEkM47qpDYu0GYEnxPhpcAZQbaVJ5noBOaTx0hQ== */}
+
+## การตั้งค่า Grafana
+
+- เข้าไปที่ `http://localhost:3000` หรือ `http://server-ip:8086` ในเว็บเบราวเซอร์ 
+แล้วเข้าสู่ระบบด้วยข้อมูลผู้ใช้ `admin` และรหัสผ่าน `adminpassword` ที่ได้กำหนดไว้ในไฟล์ docker-compose.yml
+
+![Login Grafana](https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/Screenshot_2567_06_01_at_17_59_31_6fba864155.png)
+
+### เพิ่ม Data Source
+
+- ให้ไปที่ `Connection` -> `Data Source` แล้วเลือก `InfluxDB`
+
+![Data Source](https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/Screenshot_2567_06_01_at_18_03_36_443adf669a.png)
+
+- เลือก Query Language เป็น `Flux`
+
+![Query Language](https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/Screenshot_2567_06_01_at_18_13_20_de9f5b9a76.png)
+
+- ตั้งค่า URL ให้เป็น `http://localhost:8086` หรือ `http://server-ip:8086`
+
+![URL](https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/Screenshot_2567_06_01_at_18_06_29_21672cbffd.png)
+
+- เปิดใช้งาน Basic Auth และกรอก Username และ Password ให้ตรงกับที่ได้ตั้งค่าใน docker-compose.yml
+
+![Basic Auth](https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/Screenshot_2567_06_01_at_18_14_28_00b25a018b.png)
+
+- กรอกข้อมูล Organization, Bucket, Token ที่ได้จากการตั้งค่า InfluxDB
+
+![InfluxDB Details](https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/Screenshot_2567_06_01_at_18_15_47_7901224441.png)
+
+- คลิก `Save & Test` เพื่อทดสอบการเชื่อมต่อ
+
+![Save & Test](https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/Screenshot_2567_06_01_at_18_16_37_1461c93349.png)
+
+<Callout type="info">
+ถ้าหากขึ้นข้อความ `Data source is working` แสดงว่าการเชื่อมต่อสำเร็จ !!!
+</Callout>
+
+## สร้าง Dashboard
+
+### สร้าง Dashboard ใหม่
+
+- ให้ไปที่เมนู `Dashboards` -> `Create Dashboard`
+
+![Create Dashboard](https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/Screenshot_2567_06_01_at_18_18_17_2fcd63c249.png)
+
+- กด `Add visualization` เพื่อเพิ่มกราฟ และเลือก `Data Source` ที่เราตั้งค่าไว้
+
+![Add Visualization](https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/Screenshot_2567_06_01_at_18_20_53_69514e975e.png)
+
+- ช่องสำหรับเขียน Query เพื่อดึงข้อมูลจาก InfluxDB มาแสดงผลเป็นกราฟ
+
+![Query](https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/Screenshot_2567_06_01_at_18_22_00_9c0deb10b5.png)
+
+## เพิ่มข้อมูลใน InfluxDB เพื่อทดสอบ
+
+- หลักจากที่เราได้ตั้งค่าทุกอย่างเสร็จเรียบร้อยแล้ว ให้เข้าไปที่ `http://localhost:8086` หรือ `http://server-ip:8086` ในเว็บเบราวเซอร์
+เพื่อเข้าไปเพิ่มข้อมูลใน InfluxDB ของเรากัน
+- ตอนนี้ Bucket ของเราจะว่างเปล่าอยู่ ให้เราเพิ่มข้อมูลเข้าไปเพื่อนำไปแสดงผลใน Grafana
+
+### ให้กดที่ `Data Explorer` แล้วเลือก `Bucket` ที่เราตั้งค่าไว้ และกดไปที่ `Script Editor`
+
+![Data Explorer](https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/Screenshot_2567_06_01_at_18_28_27_3b5c2e373e.png)
+
+- ใช้สคริปต์ Flux เพื่อเพิ่มข้อมูลจำลองเข้าไปใน Bucket ของเรา
+
+```flux title="Flux Script"
+import "experimental"
+import "array"
+
+data = array.from(rows: [
+  {_time: experimental.addDuration(d: -10m, to: now()), _measurement: "measurement", tag1: "value1", _field: "field1", _value: 1},
+  {_time: experimental.addDuration(d: -9m, to: now()), _measurement: "measurement", tag1: "value1", _field: "field1", _value: 2},
+  {_time: experimental.addDuration(d: -8m, to: now()), _measurement: "measurement", tag1: "value1", _field: "field1", _value: 3},
+  {_time: experimental.addDuration(d: -7m, to: now()), _measurement: "measurement", tag1: "value1", _field: "field1", _value: 4},
+  {_time: experimental.addDuration(d: -6m, to: now()), _measurement: "measurement", tag1: "value1", _field: "field1", _value: 5},
+  {_time: experimental.addDuration(d: -5m, to: now()), _measurement: "measurement", tag1: "value1", _field: "field1", _value: 6},
+  {_time: experimental.addDuration(d: -4m, to: now()), _measurement: "measurement", tag1: "value1", _field: "field1", _value: 7},
+  {_time: experimental.addDuration(d: -3m, to: now()), _measurement: "measurement", tag1: "value1", _field: "field1", _value: 8},
+  {_time: experimental.addDuration(d: -2m, to: now()), _measurement: "measurement", tag1: "value1", _field: "field1", _value: 9},
+  {_time: experimental.addDuration(d: -1m, to: now()), _measurement: "measurement", tag1: "value1", _field: "field1", _value: 10}
+])
+
+data
+  |> to(bucket: "test")
+```
+
+<Callout type="info">
+สคริปต์นี้จะสร้างข้อมูลจำลอง 10 แถวใน bucket `test` โดยมีเวลาเป็นช่วงเวลาที่แตกต่างกันภายใน 10 นาทีที่ผ่านมา และค่า field1 เป็นตัวเลขตั้งแต่ 1 ถึง 10
+</Callout>
+
+- หลังจากนั้นกด `Submit` เพื่อเพิ่มข้อมูลเข้าไปใน Bucket
+
+![Submit](https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/Screenshot_2567_06_01_at_18_32_17_3b9c2874fb.png)
+
+- เมื่อไม่มีอะไรผิดพลาดขึ้น ข้อมูลจะถูกเพิ่มเข้าไปใน Bucket ของเรา และจะแสดงเส้นกราฟใน Data Explorer
+
+![Data Added](https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/Screenshot_2567_06_01_at_18_34_00_f496d4d29d.png)
+
+## Query ข้อมูลจาก InfluxDB ใน Grafana
+
+- ให้เพิ่มคำสั่ง Query ใน Visualization ของเรา
+
+```flux title="Flux Query"
+from(bucket: "test")
+  |> range(start: -1h)
+  |> filter(fn: (r) => r._measurement == "measurement")
+  |> filter(fn: (r) => r.tag1 == "value1")
+  |> aggregateWindow(every: 1m, fn: mean, createEmpty: false)
+  |> yield(name: "mean")
+```
+
+![Query](https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/Screenshot_2567_06_01_at_18_36_11_7b45b06926.png)
+
+### อธิบายการทำงานของคำสั่ง
+
+- `from(bucket: "test")`
+    - เลือก bucket ชื่อ `test` เป็นแหล่งข้อมูลเริ่มต้นที่จะทำการ query
+- `|> range(start: -1h)`
+    - กำหนดช่วงเวลาของข้อมูลที่ต้องการดึงมา โดยจะดึงข้อมูลตั้งแต่ 1 ชั่วโมงที่ผ่านมาจนถึงปัจจุบัน
+    - `-1h` หมายถึง 1 ชั่วโมงที่ผ่านมาจากเวลาปัจจุบัน
+- `|> filter(fn: (r) => r._measurement == "measurement")`
+    - กรองข้อมูลให้เหลือเฉพาะที่ `_measurement` มีค่าเป็น "measurement"
+    - ฟังก์ชั่น `filter` จะทำการประเมินเงื่อนไข `fn: (r) => r._measurement == "measurement"` โดย `r` คือแต่ละแถวของข้อมูล
+- `|> filter(fn: (r) => r.tag1 == "value1")`
+    - กรองข้อมูลเพิ่มเติมให้เหลือเฉพาะที่ `tag1` มีค่าเป็น "value1"
+- `|> aggregateWindow(every: 1m, fn: mean, createEmpty: false)`
+    - ทำการรวมข้อมูลในช่วงเวลาที่กำหนดโดยใช้ฟังก์ชั่น `mean` (ค่าเฉลี่ย)
+    - `every: 1m` หมายถึงช่วงเวลา 1 นาที
+    - `createEmpty: false` หมายถึงไม่สร้างช่วงเวลาที่ไม่มีข้อมูล
+- `|> yield(name: "mean")`
+    - ส่งผลลัพธ์ออกมาโดยใช้ชื่อ "mean"
+    - `yield`เป็นคำสั่งที่บอกให้ query สิ้นสุดและส่งผลลัพธ์
+
+### ตัวอย่างตารางของข้อมูล
+| _time	| _value |
+|-------|--------|
+|2024-06-01T12:00:00Z |	10.5 |
+|2024-06-01T12:01:00Z |	11.0 |
+|2024-06-01T12:02:00Z |	10.2 |
+
+
+## บันทึกการตั้งค่า
+- กด `Apply` เพื่อบันทึกการตั้งค่า
+- เราก็จะได้ข้อมูลจาก InfluxDB มาแสดงผลใน Grafana เรียบร้อย
+
+<Callout type="info">
+คุณสามารถเปลี่ยนรูปแบบของกราฟได้โดยกดไปที่ `Visualization` และเลือกรูปแบบที่ต้องการ
+</Callout>
+
+![Graph](https://strapi-blog-cms-7x8xk.ondigitalocean.app/uploads/Screenshot_2567_06_01_at_18_50_21_3d7b60e59b.png)
+
+## สรุป
+
+ในบทความนี้เราได้เรียนรู้วิธีการสร้าง Dashboard ด้วย Grafana และ InfluxDB ด้วย Docker บน Ubuntu
+และเราได้ทำการตั้งค่าและเชื่อมต่อ Grafana กับ InfluxDB และสร้าง Dashboard แสดงผลข้อมูลจาก InfluxDB ได้เรียบร้อย ไว้เจอกันใน Blog ต่อไปครับ 👋👋👋

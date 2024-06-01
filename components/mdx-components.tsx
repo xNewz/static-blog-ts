@@ -13,6 +13,18 @@ const components = {
   img: (props: any) => (
     <Image {...props} width={800} height={400} className="mx-auto" />
   ),
+  th: (props: any) => (
+    <th
+      {...props}
+      className="border p-2 bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-700 whitespace-nowrap"
+    />
+  ),
+  td: (props: any) => (
+    <td
+      {...props}
+      className="border p-2 border-gray-300 dark:border-gray-700 whitespace-nowrap"
+    />
+  ),
   ul: (props: any) => <ul {...props} className="list-disc pl-6" />,
   h1: (props: any) => <h1 {...props} className="text-4xl font-bold my-6" />,
   h2: (props: any) => <h2 {...props} className="text-3xl font-bold my-6" />,
