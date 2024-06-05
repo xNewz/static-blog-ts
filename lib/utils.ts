@@ -46,3 +46,7 @@ export function getPostsByTagSlug(posts: Array<Post>, tag: string) {
     return slugifiedTags.includes(tag);
   });
 }
+
+export function getAllPostSlugs(posts: Array<Post>) {
+  return posts.map((post) => post.slug);
+}
