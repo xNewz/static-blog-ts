@@ -1,0 +1,282 @@
+---
+title: วิธีทำ Auth API ด้วย Express, JWT, MySQL และ Prisma
+description: วิธีทำ Auth API ด้วย Express JWT และ MySQL
+date: 2024-06-05
+tags: [express, jwt, mysql, prisma]
+published: true
+---
+
+การสร้าง Auth API ด้วย JWT และ MySQL โดยใช้ Prisma สำหรับการจัดการฐานข้อมูล
+จะมีการแยกส่วนประกอบออกเป็นไฟล์ต่างๆ เพื่อความสะดวกในการแก้ไข
+โดยในตัวอย่างนี้ เราจะใช้ Node.js กับ Express.js สำหรับ backend และ JWT สำหรับการจัดการ token
+พร้อมด้วย Prisma สำหรับการจัดการกับฐานข้อมูล MySQL
+
+## ขั้นตอนการติดตั้งและตั้งค่า
+```bash title="bash"
+mkdir auth-api
+cd auth-api
+```
+### สร้างโปรเจค Node.js และติดตั้ง package ที่ใช้
+```bash title="bash"
+npm init -y
+npm install express prisma @prisma/client jsonwebtoken bcryptjs body-parser
+```
+
+### ตั้งค่า Prisma
+```bash title="bash"
+npx prisma init
+```
+
+### ตั้งค่าไฟล์ Prisma schema
+```prisma title="prisma/schema.prisma"
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int      @id @default(autoincrement())
+  username String   @unique
+  password String
+}
+```
+
+### ตั้งค่าไฟล์ .env
+- `user` ชื่อผู้ใช้ของ MySQL
+- `password` รหัสผ่านของ MySQL
+- `localhost:3306` ที่อยู่ของ MySQL
+- `auth_db` ชื่อฐานข้อมูลที่จะใช้
+```env title=".env" /user/#v /password/#v /localhost:3306/#v /auth_db/#v
+DATABASE_URL="mysql://user:password@localhost:3306/auth_db"
+```
+
+### สร้างฐานข้อมูลและตาราง
+```bash title="bash"
+npx prisma migrate dev --name init
+```
+
+### สร้างไฟล์และโฟลเดอร์ต่างๆ
+```bash title="bash"
+touch server.js config.js routes.js
+mkdir controllers models middlewares
+touch controllers/authController.js middlewares/middleware.js
+```
+
+### โครงสร้างโปรเจค
+```plaintext
+auth-api/
+├── controllers/
+│   └── authController.js
+├── middlewares/
+│   └── middleware.js
+├── models/
+│   └── userModel.js
+├── prisma/
+│   ├── migrations/
+│   │   └── <migration files>
+│   ├── schema.prisma
+├── .env
+├── config.js
+├── package.json
+├── routes.js
+├── server.js
+```
+
+### เขียนโค้ดสำหรับแต่ละไฟล์
+```javascript showLineNumbers showLineNumbers title="server.js"
+const express = require('express'); // เรียกใช้งาน express เพื่อสร้าง server
+const bodyParser = require('body-parser'); // เรียกใช้งาน body-parser เพื่อแปลงข้อมูลที่ส่งมาให้เป็น JSON
+const routes = require('./routes'); // เรียกใช้งานไฟล์ routes.js ที่เราสร้างไว้เพื่อใช้ในการกำหนดเส้นทางของ API
+
+const app = express(); // สร้าง instance ของ express
+const PORT = process.env.PORT || 3000; // กำหนด port ที่จะใช้ในการรัน server
+
+app.use(bodyParser.json()); // ใช้ body-parser ในการแปลงข้อมูลที่ส่งมาให้เป็น JSON
+app.use('/api', routes); // กำหนดเส้นทางของ API
+
+app.listen(PORT, () => { // รัน server ที่ port ที่กำหนด
+    console.log(`Server is running on port ${PORT}`);
+});
+```
+
+```javascript showLineNumbers title="config.js"
+module.exports = {
+    jwtSecret: 'your-secret-key' // กำหนด secret key สำหรับการสร้าง token
+};
+```
+
+```javascript showLineNumbers title="models/userModel.js"
+const { PrismaClient } = require('@prisma/client'); // เรียกใช้งาน PrismaClient จาก @prisma/client
+const prisma = new PrismaClient(); // สร้าง instance ของ PrismaClient
+const bcrypt = require('bcryptjs'); // เรียกใช้งาน bcryptjs เพื่อใช้ในการเข้ารหัสรหัสผ่าน
+
+// สร้างผู้ใช้ใหม่
+const createUser = async (user) => {
+    // เข้ารหัสรหัสผ่านก่อนที่จะเก็บไว้ในฐานข้อมูล
+    const hash = await bcrypt.hash(user.password, 10);
+    // บันทึกข้อมูลผู้ใช้ลงในฐานข้อมูล
+    return prisma.user.create({
+        data: {
+            username: user.username,
+            password: hash
+        }
+    });
+};
+
+// ค้นหาผู้ใช้จากชื่อผู้ใช้
+const findUserByUsername = async (username) => {
+    return prisma.user.findUnique({
+        where: { username: username }
+    });
+};
+
+module.exports = {
+    createUser,
+    findUserByUsername
+};
+```
+
+```javascript showLineNumbers title="controllers/authController.js"
+const jwt = require('jsonwebtoken'); // เรียกใช้งาน jwt เพื่อใช้ในการสร้าง token
+const bcrypt = require('bcryptjs'); // เรียกใช้งาน bcryptjs เพื่อใช้ในการเข้ารหัสรหัสผ่าน
+const config = require('../config'); // เรียกใช้งานไฟล์ config.js ที่เราสร้างไว้
+const User = require('../models/userModel'); // เรียกใช้งาน userModel.js ที่เราสร้างไว้
+
+const register = async (req, res) => {
+    const { username, password } = req.body; // รับข้อมูล username และ password จาก body ของ request
+    // สร้างผู้ใช้ใหม่
+    try {
+        await User.createUser({ username, password });
+        res.status(201).json({ message: 'User registered successfully' });
+    } catch (err) { // หากเกิดข้อผิดพลาดในการสร้างผู้ใช้
+        res.status(500).json({ message: 'Error registering user' });
+    }
+};
+
+const login = async (req, res) => {
+    const { username, password } = req.body; // รับข้อมูล username และ password จาก body ของ request
+    try {
+        const user = await User.findUserByUsername(username); // ค้นหาผู้ใช้จากชื่อผู้ใช้
+        if (!user) { // หากไม่พบผู้ใช้
+            return res.status(401).json({ message: 'Invalid username or password' });
+        }
+        // หากรหัสผ่านไม่ตรงกับที่เก็บไว้ในฐานข้อมูล
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(401).json({ message: 'Invalid username or password' });
+        }
+        // สร้าง token และส่งกลับไปให้ผู้ใช้
+        const token = jwt.sign({ id: user.id }, config.jwtSecret, { expiresIn: '1h' });
+        res.json({ token });
+    } catch (err) { // หากเกิดข้อผิดพลาดในการเข้าสู่ระบบ
+        res.status(500).json({ message: 'Error logging in' });
+    }
+};
+
+module.exports = {
+    register,
+    login
+};
+```
+
+```javascript showLineNumbers title="middlewares/middleware.js"
+const jwt = require('jsonwebtoken'); // เรียกใช้งาน jwt เพื่อใช้ในการตรวจสอบ token
+const config = require('../config'); // เรียกใช้งานไฟล์ config.js ที่เราสร้างไว้
+
+// next คือ callback function ที่ใช้ในการส่งต่อไปยัง middleware ถัดไป
+const verifyToken = (req, res, next) => { // middleware สำหรับตรวจสอบ token
+    const token = req.headers['authorization']; // รับ token จาก header ของ request
+    if (!token) return res.status(403).json({ message: 'No token provided' }); // หากไม่มี token ให้ส่งข้อความกลับไปว่าไม่มี token
+
+    jwt.verify(token, config.jwtSecret, (err, decoded) => { // ตรวจสอบ token
+        if (err) return res.status(500).json({ message: 'Failed to authenticate token' }); // หากไม่สามารถตรวจสอบ token ได้ให้ส่งข้อความกลับไปว่าไม่สามารถตรวจสอบ token ได้
+
+        req.userId = decoded.id; // ถ้าตรวจสอบ token สำเร็จ ให้เก็บ id ของผู้ใช้ไว้ใน req.userId
+        next(); // ส่งต่อไปยัง middleware ถัดไป
+    });
+};
+
+module.exports = {
+    verifyToken
+};
+```
+
+```javascript showLineNumbers title="routes.js"
+const express = require('express'); // เรียกใช้งาน express
+const authController = require('./controllers/authController'); // เรียกใช้งาน authController.js ที่เราสร้างไว้
+const middleware = require('./middlewares/middleware'); // เรียกใช้งาน middleware.js ที่เราสร้างไว้
+
+const router = express.Router(); // สร้าง instance ของ express.Router
+
+router.post('/register', authController.register); // สร้างเส้นทางสำหรับการลงทะเบียนผู้ใช้
+router.post('/login', authController.login); // สร้างเส้นทางสำหรับการเข้าสู่ระบบ
+
+// Protected route example
+router.get('/protected', middleware.verifyToken, (req, res) => { // สร้างเส้นทางสำหรับการตรวจสอบ token
+    res.json({ message: 'This is a protected route', userId: req.userId }); // ส่งข้อความกลับไปว่านี่คือเส้นทางที่ถูกป้องกัน
+});
+
+module.exports = router;
+```
+
+### รัน server
+```bash title="bash"
+node server.js
+```
+
+เราสามารถทดสอบ API ด้วย Postman หรือ Thunder Client โดยการสร้าง request ไปที่ `http://localhost:3000/api/register` และ `http://localhost:3000/api/login` และส่งข้อมูล username และ password ไปด้วย
+
+### ตัวอย่าง request สำหรับการลงทะเบียนผู้ใช้
+```json title="/api/register"
+{
+    "username": "john_doe",
+    "password": "password123"
+}
+```
+
+```json title="Response"
+{
+    "message": "User registered successfully"
+}
+```
+
+### ตัวอย่าง request สำหรับการเข้าสู่ระบบ
+```json title="/api/login"
+{
+    "username": "john_doe",
+    "password": "password123"
+}
+```
+
+```json title="Response
+{
+    "token": "token-string"
+}
+```
+
+### ตัวอย่าง request สำหรับเส้นทางที่ถูกป้องกัน
+```json title="/api/protected"
+// ใส่ token ใน header ของ request
+{
+    "Authorization": "token-string"
+}
+```
+
+```json title="Response"
+{
+    "message": "This is a protected route",
+    "userId": 1
+}
+```
+
+นอกจากนี้เรายังสามารถใช้งาน Prisma Studio เพื่อดูข้อมูลในฐานข้อมูลได้ด้วย
+```bash title="bash"
+npx prisma studio
+```
+
+สามารถดูตัวอย่างโค้ดทั้งหมดได้จาก [GitHub](https://github.com/xNewz/auth-api-mysql-prisma)
+หรือสามารถดูตัวอย่างการทำงานได้จาก [YouTube](https://www.youtube.com/watch?v=WERrX2NjBEA&t=198s)
