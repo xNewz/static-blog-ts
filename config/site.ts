@@ -2,9 +2,9 @@ export const siteConfig = {
   name: "Pargorn Ruasijan",
   url: "https://static.xnewz.site",
   author: "xNewz",
-  occupation: "Web Developer",
+  occupation: "Software Engineer",
   description:
-    "I currently study School of Industrial Education and Technology, KMITL",
+    "I work as a software engineer at an internet company in Thailand. I love learning and sharing knowledge.",
   links: {
     github: "https://github.com/xnewz",
     personalSite: "https://static.xnewz.site",
@@ -12,7 +12,8 @@ export const siteConfig = {
   },
   blog: {
     title: "Blog",
-    description: "A collection of articles about web development, programming, and other topics that interest me.",
+    description:
+      "A collection of articles about web development, programming, and other topics that interest me.",
   },
 };
 
