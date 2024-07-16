@@ -13,7 +13,8 @@ const aboutPage = () => {
         {">"}About
       </div>
       <div className="text-lg text-gray-900 dark:text-gray-100">
-        My name is Pargorn Ruasijan and I am a web developer. This is my&nbsp;
+        My name is Pargorn Ruasijan and I'm a software engineer. This is
+        my&nbsp;
         <Link
           href="https://github.com/xnewz"
           className="hover:underline text-blue-500"
@@ -23,10 +24,10 @@ const aboutPage = () => {
           Github
         </Link>
         , where I share my projects and experiments. I am passionate about web
-        development and I am always looking for new things to learn.
+        development and I'm always looking for new things to learn.
       </div>
       <div className="text-lg text-gray-900 dark:text-gray-100 mt-10">
-        I have a vocational certificate in Information Technology from&nbsp;
+        I have a vocational certificate in information technology from&nbsp;
         <Link
           href="https://www.uthai.ac.th/"
           className="hover:underline text-blue-500"
@@ -34,9 +35,9 @@ const aboutPage = () => {
           rel="noopener noreferrer"
         >
           Uthai Thani Technical College
-        </Link>&nbsp;
-        and I am currently studying for a Bachelor of Science in Industrial
-        Education Program in Engineering Education at&nbsp;
+        </Link>
+        &nbsp; and I have a bachelor of science in industrial education program
+        in engineering education. at&nbsp;
         <Link
           href="https://www.kmitl.ac.th/"
           className="hover:underline text-blue-500"
@@ -44,7 +45,8 @@ const aboutPage = () => {
           rel="noopener noreferrer"
         >
           King Mongkut's Institute of Technology Ladkrabang
-        </Link>&nbsp;
+        </Link>
+        &nbsp;
       </div>
       <div className="text-lg text-gray-900 dark:text-gray-100 mt-10">
         I also have a&nbsp;
@@ -69,8 +71,8 @@ const aboutPage = () => {
               rel="noopener noreferrer"
             >
               Little Bean Soft
-            </Link>&nbsp;
-            - Internship
+            </Link>
+            &nbsp; - Internship
           </li>
           <li>
             <Link
@@ -80,8 +82,19 @@ const aboutPage = () => {
               rel="noopener noreferrer"
             >
               Uthai Thani Technical College
-            </Link>&nbsp;
-            - Teaching Practice
+            </Link>
+            &nbsp; - Teaching Practice
+          </li>
+          <li>
+            <Link
+              href="https://www.inet.co.th/"
+              className="hover:underline text-blue-500"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Internet Thailand Public Company Limited
+            </Link>
+            &nbsp; - Software Engineer
           </li>
         </ul>
       </div>
