@@ -72,7 +72,7 @@ const aboutPage = () => {
             >
               Little Bean Soft
             </Link>
-            &nbsp; - Internship
+            &nbsp; - Back End Developer (Internship)
           </li>
           <li>
             <Link
